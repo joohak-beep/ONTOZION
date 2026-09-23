@@ -318,7 +318,7 @@
           </div>
         </section>
 
-        <section class="view" id="view-harness" data-search="하네스 구성 온톨로지 의미 기억층 엔티티 관계 그래프 모듈 기억 라우터 검증 실행기">
+        <section class="view" id="view-harness" data-search="하네스 구성 온톨로지 의미 기억층 엔티티 관계 그래프 모듈 기억 라우터 검증 실행기 원장 블록체인 해시 봉인 상속">
           <div class="eyebrow">02 · Harness</div><h2>하네스는 자비스의 운영체제입니다</h2>
           <p class="lead">모델이 똑똑해도 하네스가 없으면 대화만 합니다. 하네스는 모델을 실제 장치·기억·권한·기록과 연결하는 동시에, 모든 의미 기억을 이해 가능한 온톨로지로 묶는 자비스 OS의 의미 커널입니다.</p>
           <div class="section-head"><div><h3>구성요소와 역할</h3></div></div>
@@ -365,6 +365,14 @@
   → 음성·화면 보고</pre>
           <div class="callout" style="margin-top:14px"><strong>성능 원칙:</strong> 온톨로지 때문에 매번 큰 LLM을 부르지 않습니다. 기준 원장은 append-only 이벤트로 두고, 자주 쓰는 관계는 메모리 캐시·컴파일된 정책 질의로 처리하며, 벡터·키워드·그래프 색인은 비동기로 재생성합니다. 그래서 의미는 정교하게 유지하면서도 단순 작업은 빠른 실행 통로를 탑니다.</div>
           <div class="callout" style="margin-top:14px;background:var(--teal-soft);border-color:#bfe5d9"><strong>온톨로지 합격 기준:</strong> 모든 의미 기억 쓰기가 안정된 ID·관계·출처·시간을 남길 것, 색인을 삭제 후 원장에서 재생성할 것, 모순을 덮어쓰지 않을 것, capability 관계가 없으면 실행하지 않을 것, 상속 모드가 실행 권한을 자동으로 넓히지 않을 것.</div>
+          <div class="callout" style="margin-top:14px;background:#fff7e6;border-color:#f0d69b"><strong>감사 원장과 선택적 블록체인 봉인:</strong> 블록체인은 실시간 실행을 늦추는 권한 계층이 아닙니다. 자비스는 로컬 암호화 원장에 제안·승인·실행·검증 사건을 먼저 기록하고, BOSS 서명과 버전 지문을 붙인 뒤, 필요할 때 여러 사건의 Merkle Root만 백그라운드에서 외부 체인에 봉인합니다. 음성·임베딩·비밀번호·API 키·원본 기억은 체인에 올리지 않으며, 체인이 멈춰도 정상 작업은 계속합니다.</div>
+          <div class="table-wrap" style="margin-top:14px"><table><thead><tr><th>적용 분야</th><th>남길 기록</th><th>외부 봉인이 유용한 이유</th></tr></thead><tbody>
+            <tr><td>금융·증권</td><td>주문 계획·승인·체결 지문</td><td>사후 감사와 분쟁 대비</td></tr>
+            <tr><td>헌법·상속</td><td>JARVIS 버전·정책 변경·승인 시각</td><td>상속될 기준 버전 증명</td></tr>
+            <tr><td>모델·스킬 공급망</td><td>모델 해시·시험 결과·배포 버전</td><td>실제 실행 모델 확인</td></tr>
+            <tr><td>다중 자비스 노드</td><td>노드 서명·질문·답변·결과 지문</td><td>컴퓨터 간 기록 대조</td></tr>
+            <tr><td>동의·권한</td><td>동의 버전·철회 시각·capability 범위</td><td>허용 시점과 범위 증명</td></tr>
+          </tbody></table></div>
           <div class="section-head"><div><h3>CodePlan: 로컬 모델은 설계자, 하네스는 실행자</h3></div><p>코드가 소비하는 것은 자유 문장이 아니라 타입이 있는 실행 계획입니다.</p></div>
           <div class="grid-3">
             <div class="card"><span class="pill">Reflex lane</span><h4 style="margin-top:10px">소형 로컬 SLLM</h4><p>의도 분류, 엔티티 연결, 반복 작업의 <strong>skill_id</strong> 선택, 간단한 CodePlan을 빠르게 생성합니다.</p></div>

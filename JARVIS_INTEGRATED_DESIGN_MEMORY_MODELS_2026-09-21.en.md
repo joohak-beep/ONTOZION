@@ -563,6 +563,40 @@ Failure states:
 }
 ```
 
+### 14.1 Change history and optional blockchain sealing
+
+The Constitution, policies, and skills may receive a new version when the BOSS
+approves a change. The old version is not erased: the diff, reason, approver,
+and effective time are appended to the ledger. Blockchain is not an authority
+or execution path; it is an optional external witness that helps detect a later
+rewrite of that ledger.
+
+```text
+execute → write to the local encrypted ledger → sign BOSS/version fingerprints
+        → enqueue a seal → asynchronously anchor a Merkle root externally
+```
+
+- Real-time voice, browser, CLI, and financial actions never wait for a chain confirmation.
+- Raw voice, embeddings, passwords, API keys, screenshots, and private memories never go on-chain.
+- If the chain is unavailable, work continues and the local sealing queue retries later.
+- A single BOSS-owned computer may need only a signed append-only ledger and encrypted backups.
+- Use an external anchor only for cross-owner JARVIS collaboration or inheritance evidence.
+
+#### Domain decision table
+
+| Domain | Record bundle | Why an external anchor can help |
+|---|---|---|
+| Finance and securities | Order plan, approval, and fill fingerprints | Post-trade audit and dispute evidence |
+| Constitution and succession | JARVIS version, policy change, and approval time | Prove the version intended for succession |
+| Model and skill supply chain | Model hash, test results, and release version | Verify the model that actually ran |
+| Multiple nodes | Node signatures, questions, answers, and result fingerprints | Compare records across machines |
+| Consent and authority | Consent version, revocation time, and capability scope | Prove when and how a capability was allowed |
+
+The decision depends on independent parties needing to verify the same record and
+the cost of a later rewrite, not on importance alone. Personal memories, voice,
+embeddings, passwords, and raw financial records stay off-chain; blockchain does
+not replace a legal will, a notary, or a broker's official record.
+
 Never record raw passwords, card numbers, API keys, or private source audio.
 
 ## 15. Failure and recovery

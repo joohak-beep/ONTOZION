@@ -194,6 +194,41 @@ not require a large LLM on every request: hot session relations use RAM and
 compiled queries, while embeddings, deduplication, and graph projections update
 asynchronously so the fast lane remains fast.
 
+## Audit ledger and optional blockchain sealing
+
+Blockchain is not JARVIS's real-time execution engine. It is an optional external
+seal that helps prove, after a task, that its record was not silently rewritten.
+The hot path finishes locally; blockchain anchoring runs asynchronously in the
+background.
+
+- **Ledger:** an encrypted local store keeps proposed, approved, executed, observed, verified, and recovered events.
+- **Seal:** the BOSS signature, Constitution version, policy version, plan fingerprint, and result fingerprint are recorded.
+- **Anchor:** events can be batched into a Merkle root (one fingerprint for many records) and anchored to an external chain only when useful.
+- **Privacy:** voice, embeddings, passwords, API keys, and raw memories never go on-chain; they remain encrypted locally.
+- **Succession:** the system can prove when a BOSS-approved JARVIS version and succession policy existed, without silently granting execution authority to an heir.
+
+If the chain is unavailable, JARVIS continues normal work. The sealing queue stays
+local and retries later. A single personal computer may need only a signed
+append-only ledger and encrypted backups; an external blockchain anchor is an
+optional witness for cross-owner collaboration or inheritance evidence.
+
+### Domains worth considering for blockchain anchoring
+
+The test is not merely “is this record important?” It is: **must independent
+parties verify the same record, and would a later rewrite cause loss or dispute?**
+
+| Domain | Record | Why anchor it |
+|---|---|---|
+| Finance and securities | Order plan, BOSS approval, and fill fingerprints | Post-trade audit and dispute evidence |
+| Constitution and succession | JARVIS version, policy change, and approval time | Prove which version was intended for heirs |
+| Model and skill supply chain | Model hash, test results, and release version | Verify which model actually ran |
+| Multiple JARVIS nodes | Node signatures, questions, answers, and result fingerprints | Compare records across machines |
+| Consent and authority | Consent version, revocation time, and scope | Prove when a capability was allowed |
+
+Personal notes, voice, embeddings, passwords, and raw financial records stay off
+chain. Blockchain anchoring also does not replace a legal will, a notary, or a
+financial institution's official records.
+
 ## CodePlan and local model roles
 
 Having an LLM write a human paragraph and then making code parse that paragraph
