@@ -328,7 +328,7 @@
           <div class="gate stop"><strong>Stop rule:</strong> unknown actor, changed target, stale token, policy mismatch, or unverifiable postcondition means stop and surface the reason.</div>
         </section>
 
-        <section class="view" id="view-models">
+        <section class="view" id="view-models" data-search="model roles SLLM open-weight cloud Architect GLM Qwen DeepSeek distillation">
           <h3>05 · Model roles</h3>
           <p class="lead">Use multiple models by role, not by prestige. A local model protects privacy and provides continuity; a cloud teacher can expand capability without becoming the owner.</p>
           <table><thead><tr><th>Model</th><th>Best use</th><th>Cannot do alone</th></tr></thead><tbody>
@@ -337,6 +337,8 @@
             <tr><td>Cloud frontier teacher</td><td>Hard cases, critique, synthetic examples, distillation targets</td><td>Receive sensitive data by default or directly execute local actions</td></tr>
             <tr><td>Verifier models / rules</td><td>Schema, safety, factual, and postcondition checks</td><td>Replace the BOSS or conceal disagreement</td></tr>
           </tbody></table>
+          <div class="gate" style="background:#f4f0ff;border-color:#d7c7f5"><strong>Organic learning loop:</strong> The personal SLLM owns fast routing and BOSS-specific procedures; the local open-weight model owns private deep reasoning and coding; the cloud model acts as an Architect/teacher for difficult design and critique. Only harness-verified outcomes become skills or training examples, after which the SLLM learns the stable procedure and the local model retains the private context.</div>
+          <div class="gate" style="background:#fff7e6;border-color:#f0d69b"><strong>Architect caution:</strong> A cloud frontier model may provide the strongest design advice, but it remains an external dependency. Send redacted CodePlans rather than D2/D3 memories, secrets, or capability tokens; challenge its output with local models and regression tests. The cloud model cannot rewrite the Constitution, ontology, or BOSS decisions.</div>
           <div class="card full"><h4>Learning loop</h4><p>Local models collect approved, redacted traces → teacher critiques selected examples → SLLM learns stable procedures and routing → offline tests and canary deployment measure regression → the BOSS approves promotion.</p></div>
         </section>
 
@@ -379,13 +381,16 @@
           <table><thead><tr><th>Candidate</th><th>Role to test</th><th>Audit questions</th></tr></thead><tbody>
             <tr><td>Qwen3 family</td><td>General local dialogue, tool use, multilingual routing</td><td>Tool-call accuracy, Korean quality, long-context recall, license obligations</td></tr>
             <tr><td>DeepSeek-R1 family</td><td>Reasoning teacher or difficult local reasoning</td><td>Latency, verbosity, refusal behavior, reasoning trace handling, license</td></tr>
+            <tr><td>GLM / ChatGLM, Yi, InternLM, and other Chinese open-weight candidates</td><td>Additional dialogue, multilingual, coding, or reasoning lanes</td><td>Weights and license, Korean quality, tool contracts, censorship/omission behavior, quantized regression, harness fit</td></tr>
             <tr><td>Personal SLLM</td><td>Stable private procedures and user-specific routing</td><td>Regression, data leakage, forgetting, calibration, rollback</td></tr>
           </tbody></table>
           <div class="grid">
             <article class="card"><h4>Quantization ladder</h4><p>Start with BF16/FP16 reference → FP8/INT8 → Q8 → Q6 → AWQ/GPTQ 4-bit only if quality and tool reliability remain within the acceptance budget.</p></article>
             <article class="card"><h4>Honesty audit</h4><p>Probe factual stability, uncertainty, refusal consistency, multilingual parity, censorship or omission patterns, and whether the model admits missing evidence.</p></article>
-            <article class="card"><h4>Public sources</h4><p><a href="https://arxiv.org/abs/2505.09388">Qwen3</a> · <a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1</a> · <a href="https://arxiv.org/abs/2506.12349">information-suppression audit</a> · <a href="https://arxiv.org/abs/2306.00978">AWQ</a> · <a href="https://arxiv.org/abs/2210.17323">GPTQ</a></p></article>
+            <article class="card"><h4>Public sources</h4><p><a href="https://arxiv.org/abs/2505.09388">Qwen3</a> · <a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1</a> · <a href="https://github.com/THUDM/GLM">GLM / ChatGLM</a> · <a href="https://arxiv.org/abs/2506.12349">information-suppression audit</a> · <a href="https://arxiv.org/abs/2306.00978">AWQ</a> · <a href="https://arxiv.org/abs/2210.17323">GPTQ</a></p></article>
           </div>
+          <div class="gate" style="background:#f4f0ff;border-color:#d7c7f5"><strong>ONTOZION fit score:</strong> Evaluate every candidate on Korean/multilingual dialogue, long-memory retrieval, typed CodePlans, MCP/ACP tool calls, factuality and uncertainty, censorship/omission behavior, quantized latency and memory, license, and harness integration. Do not crown one model globally; route each task to the best measured fit.</div>
+          <div class="gate" style="background:#eef8ff;border-color:#b9dcf2"><strong>Cloud routing and OpenRouter:</strong> An OpenRouter CLI/API adapter can make several Architect models easy to compare and lets the harness control an allowlist, fallbacks, and budget. It is not automatically the cheapest path: record actual tokens, the model ultimately served, service tier, latency, retention/region, and quality, then compare with direct provider APIs. OpenRouter is a replaceable Architect gateway, never the owner of the Constitution or execution authority. <a href="https://openrouter.ai/docs/api/api-reference/models/get-models">Models/pricing API</a> · <a href="https://openrouter.ai/docs/guides/routing/model-fallbacks">fallbacks</a> · <a href="https://openrouter.ai/docs/guides/features/service-tiers">service tiers</a></div>
         </section>
 
         <section class="view" id="view-records">

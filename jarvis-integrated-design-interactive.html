@@ -435,13 +435,15 @@
           <div class="callout" style="margin-top:14px"><strong>원칙:</strong> 자비스에게 관리자 비밀번호를 주지 않습니다. 자비스는 “백업 실행” 같은 제한된 능력을 요청하고, 중개기가 조건을 확인한 뒤 서명된 절차만 실행합니다.</div>
         </section>
 
-        <section class="view" id="view-models" data-search="모델 SLLM 오픈웨이트 클라우드 교사 병렬 학습">
+        <section class="view" id="view-models" data-search="모델 SLLM 오픈웨이트 클라우드 교사 Architect GLM Qwen DeepSeek 병렬 학습 증류">
           <div class="eyebrow">05 · Model collaboration</div><h2>모델은 역할을 나눠 함께 움직입니다</h2>
           <p class="lead">모델 여러 개가 의견을 내는 것은 가능하지만, 실제 행동은 검증기와 권한 중개기를 통과한 하나의 계획만 확정합니다.</p>
           <div class="section-head"><div><h3>역할 분담</h3></div><span class="pill violet">병렬 사고 · 단일 실행</span></div>
           <div class="model-lane"><h4>개인 SLLM · 빠른 반사신경</h4><p>BOSS의 말투, 습관, 자주 쓰는 스킬, 개인 기억, 낮은 지연이 필요한 반복 작업을 담당합니다.</p></div>
           <div class="model-lane"><h4>오픈웨이트 LLM · 넓은 사고</h4><p>낯선 문제, 복잡한 분석, 새로운 계획, 모델 교체가 필요한 독립적인 추론을 담당합니다.</p></div>
           <div class="model-lane teacher"><h4>클라우드 모델 · 교사·비평가</h4><p>민감정보를 제거한 어려운 사례에 해결안·비평·시험을 제공하지만, 직접 도구를 호출하지는 않습니다.</p></div>
+          <div class="callout" style="margin-top:14px;background:#f4f0ff;border-color:#d7c7f5"><strong>유기적 학습 고리:</strong> SLLM은 BOSS의 반복 절차와 빠른 라우팅을 맡고, 로컬 오픈웨이트 모델은 개인 문맥을 지키며 깊은 추론·코딩을 맡습니다. 클라우드 모델은 AI 발전의 Architect(설계자·교사)처럼 어려운 설계와 비평을 제공하지만, 소유자·권한자·실행자가 아닙니다. 검증된 결과만 하네스가 스킬·평가 자료로 승격하고, SLLM이 다시 빠른 절차로 학습합니다.</div>
+          <div class="callout" style="margin-top:14px;background:#fff7e6;border-color:#f0d69b"><strong>Architect 주의:</strong> 클라우드 모델은 가장 강한 설계 조언을 줄 수 있어도 외부 의존성입니다. 원본 D2/D3 자료·비밀 기억·권한 토큰을 보내지 않고, 비식별 CodePlan만 보내며, 결과는 로컬 모델과 하네스 회귀시험으로 반박·검증합니다. 클라우드가 헌법·온톨로지·BOSS 결정을 바꾸도록 허용하지 않습니다.</div>
           <div class="section-head"><div><h3>학습 플라이휠</h3></div></div>
           <div class="panel"><div class="grid-3">
             <div class="card"><span class="pill">1. 기록</span><p>성공·실패·실행 증거를 로컬에 남깁니다.</p></div>
@@ -527,13 +529,14 @@
           <div class="callout" style="margin-top:14px"><strong>속도 원칙:</strong> 현재 세션과 자주 쓰는 스킬은 RAM에 미리 올리고, 임베딩·중복 검사·색인 갱신은 답변을 막지 않는 백그라운드 작업으로 처리합니다.</div>
         </section>
 
-        <section class="view" id="view-model-selection" data-search="중국 모델 검열 오픈웨이트 양자화 Qwen DeepSeek AWQ GPTQ 정직성 사실성">
+        <section class="view" id="view-model-selection" data-search="중국 모델 검열 오픈웨이트 양자화 Qwen DeepSeek GLM ChatGLM Yi InternLM AWQ GPTQ 정직성 사실성 OpenRouter">
           <div class="eyebrow">08 · Model selection</div><h2>중국 오픈웨이트 모델 선정 기준</h2>
           <p class="lead">“검열 없음”이라는 이름을 믿는 것이 아니라, 로컬 실행·응답 일관성·양자화 성능·사실성 시험을 통과한 버전만 자비스에 등록합니다.</p>
           <div class="section-head"><div><h3>역할별 후보</h3></div><p>후보일 뿐이며, 실제 자비스 시험 통과 전에는 확정 모델이 아닙니다.</p></div>
           <div class="grid-3">
             <div class="card"><span class="pill">빠른 개인 비서</span><h4 style="margin-top:10px">Qwen3 계열</h4><p>일상 대화, 한국어·다국어, 기억 호출, 반복 스킬용 후보입니다. 공식 Base·Instruct와 공식 양자화 변형을 따로 비교합니다.</p></div>
             <div class="card"><span class="pill violet">깊은 추론</span><h4 style="margin-top:10px">DeepSeek-R1 계열</h4><p>복잡한 계획·코딩·논리 문제용 후보입니다. 기본 대화 통로보다 느린 추론 통로에 배치합니다.</p></div>
+            <div class="card"><span class="pill">확장 후보</span><h4 style="margin-top:10px">GLM·ChatGLM·Yi·InternLM 등</h4><p>중국 오픈웨이트 후보를 두 모델로 미리 제한하지 않습니다. 가중치·라이선스·한국어·도구 호출·검열/누락·하네스 계약 적합성을 같은 시험표로 비교합니다.</p></div>
             <div class="card"><span class="pill amber">개인화</span><h4 style="margin-top:10px">개인 SLLM</h4><p>BOSS의 말투·습관·스킬·개인 기억을 담당합니다. 빠른 반사신경이 목적입니다.</p></div>
           </div>
           <div class="section-head"><div><h3>양자화 비교 순서</h3></div></div>
@@ -555,7 +558,9 @@
             <tr><td>양자화 회귀</td><td>원본 대비 대화·코드·도구·기억 검색 성능 저하가 기준 이하이다.</td></tr>
           </tbody></table></div>
           <div class="callout" style="margin-top:14px"><strong>주의:</strong> 오픈웨이트는 가중치를 실행할 수 있다는 뜻이지, 학습 데이터·후학습 정책·편향이 모두 공개됐다는 뜻은 아닙니다. “검열되지 않음”도 모델 이름이 아니라 자비스의 실제 시험 결과로 판정합니다.</div>
-          <p class="footnote">참고: <a href="https://arxiv.org/abs/2505.09388" target="_blank" rel="noreferrer">Qwen3 기술 보고서</a> · <a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noreferrer">DeepSeek-R1 논문</a> · <a href="https://arxiv.org/abs/2306.00978" target="_blank" rel="noreferrer">AWQ 연구</a> · <a href="https://arxiv.org/abs/2210.17323" target="_blank" rel="noreferrer">GPTQ 연구</a> · <a href="https://arxiv.org/abs/2506.12349" target="_blank" rel="noreferrer">DeepSeek 정보 억제 감사 연구</a></p>
+          <div class="callout" style="margin-top:14px;background:#f4f0ff;border-color:#d7c7f5"><strong>ONTOZION 적합도 점수:</strong> 후보는 한국어·다국어 대화, 장기 기억 회수, CodePlan·구조화 출력, MCP/ACP 도구 호출, 사실성·불확실성, 검열·누락 행동, 양자화 후 지연·메모리, 라이선스, 로컬 하네스 연결성으로 평가합니다. 최고 점수 하나를 고정하지 않고 작업별 최적 모델을 선택합니다.</div>
+          <div class="callout" style="margin-top:14px;background:#eef8ff;border-color:#b9dcf2"><strong>클라우드 선택과 OpenRouter:</strong> OpenRouter를 CLI/API 어댑터로 쓰면 여러 Architect 모델의 가격·품질·지연을 한 경로에서 비교하고, 허용 목록·fallback·예산을 하네스가 통제할 수 있습니다. 그러나 자동으로 가장 싼 것은 아닙니다. 실제 토큰 비용, 라우팅된 모델, 서비스 등급, 지연, 데이터 보존·지역을 기록해 직접 API와 비교한 뒤 채택합니다. OpenRouter는 Architect를 쉽게 바꾸는 창구이지, 헌법이나 실행 권한의 소유자가 아닙니다. <a href="https://openrouter.ai/docs/api/api-reference/models/get-models" target="_blank" rel="noreferrer">모델·가격 API</a> · <a href="https://openrouter.ai/docs/guides/routing/model-fallbacks" target="_blank" rel="noreferrer">fallback</a> · <a href="https://openrouter.ai/docs/guides/features/service-tiers" target="_blank" rel="noreferrer">서비스 등급</a></div>
+           <p class="footnote">참고: <a href="https://arxiv.org/abs/2505.09388" target="_blank" rel="noreferrer">Qwen3 기술 보고서</a> · <a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noreferrer">DeepSeek-R1 논문</a> · <a href="https://github.com/THUDM/GLM" target="_blank" rel="noreferrer">GLM / ChatGLM 저장소</a> · <a href="https://arxiv.org/abs/2306.00978" target="_blank" rel="noreferrer">AWQ 연구</a> · <a href="https://arxiv.org/abs/2210.17323" target="_blank" rel="noreferrer">GPTQ 연구</a> · <a href="https://arxiv.org/abs/2506.12349" target="_blank" rel="noreferrer">DeepSeek 정보 억제 감사 연구</a></p>
         </section>
 
         <section class="view" id="view-roadmap" data-search="구현 순서 로드맵 시험 게이트 완료 기준">
