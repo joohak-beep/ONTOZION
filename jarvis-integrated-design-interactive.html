@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ONTOZION: BOSS가 소유하고 JARVIS가 판단·실행·기록·학습하는 개인 지능 운영체제의 인터랙티브 설계도">
+  <title>ONTOZION — JARVIS 개인 지능 운영체제 · 인터랙티브 설계도</title>
+  <style>
+    :root {
+      --ink: #14201f;
+      --muted: #687471;
+      --paper: #f3f0e8;
+      --panel: #fffdf8;
+      --line: #d8d2c6;
+      --carbon: #1e2b2a;
+      --teal: #147d75;
+      --teal-soft: #d9efeb;
+      --amber: #bd741b;
+      --amber-soft: #fff0d5;
+      --blue: #2c638d;
+      --blue-soft: #e0edf6;
+      --red: #b24e41;
+      --red-soft: #f8e0dc;
+      --violet: #65578f;
+      --violet-soft: #e9e3f7;
+      --shadow: 0 14px 40px rgba(22, 30, 28, .10);
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(20,125,117,.11), transparent 33%),
+        radial-gradient(circle at 95% 16%, rgba(189,116,27,.12), transparent 28%),
+        var(--paper);
+      font-family: "Segoe UI", "Malgun Gothic", system-ui, sans-serif;
+      line-height: 1.55;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .app { min-height: 100vh; }
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      display: flex; align-items: center; justify-content: space-between; gap: 18px;
+      padding: 14px 24px;
+      color: #f7f7f3;
+      background: rgba(30,43,42,.97);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 260px; }
+    .brand-mark {
+      width: 34px; height: 34px; display: grid; place-items: center;
+      border: 1px solid rgba(255,255,255,.32); border-radius: 10px;
+      color: #ffdc8b; font-weight: 800; letter-spacing: .04em;
+    }
+    .brand h1 { margin: 0; font-size: 15px; letter-spacing: .04em; }
+    .brand p { margin: 1px 0 0; color: #b7c9c4; font-size: 11px; }
+    .top-actions { display: flex; align-items: center; gap: 8px; }
+    .search {
+      width: min(30vw, 310px); padding: 9px 12px;
+      color: #eaf4f1; background: #2a3c3a; border: 1px solid #47605c; border-radius: 9px;
+      outline: none;
+    }
+    .search::placeholder { color: #a7bab5; }
+    .top-btn, .save-btn {
+      padding: 8px 11px; border: 1px solid #52706a; border-radius: 9px;
+      color: #f4fbf8; background: #2a3c3a;
+    }
+    .save-btn { color: #1d332e; background: #ffdc8b; border-color: #ffdc8b; font-weight: 700; }
+    .layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: calc(100vh - 64px); }
+    .sidebar {
+      position: sticky; top: 64px; height: calc(100vh - 64px); overflow: auto;
+      padding: 22px 15px; background: rgba(255,253,248,.78); border-right: 1px solid var(--line);
+    }
+    .side-note { margin: 0 8px 20px; color: var(--muted); font-size: 12px; }
+    .side-note strong { display: block; color: var(--ink); font-size: 14px; margin-bottom: 5px; }
+    .nav { display: grid; gap: 5px; }
+    .nav button {
+      display: flex; align-items: center; gap: 9px; width: 100%; padding: 10px 11px;
+      color: #49615d; background: transparent; border: 1px solid transparent; border-radius: 9px;
+      text-align: left;
+    }
+    .nav button:hover, .nav button[aria-current="page"] { color: var(--teal); background: var(--teal-soft); border-color: #b9dfd9; }
+    .nav .num { width: 22px; color: var(--amber); font-weight: 800; font-size: 11px; }
+    .legend { display: grid; gap: 6px; margin: 24px 8px 0; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
+    .legend span { display: flex; align-items: center; gap: 7px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .dot.teal { background: var(--teal); } .dot.amber { background: var(--amber); }
+    .dot.red { background: var(--red); } .dot.violet { background: var(--violet); }
+    main { min-width: 0; padding: 34px clamp(18px, 4vw, 58px) 80px; }
+    .view { display: none; max-width: 1220px; margin: 0 auto; animation: fade .22s ease-out; }
+    .view.active { display: block; }
+    @keyframes fade { from { opacity: .2; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+    .eyebrow { color: var(--teal); font-size: 11px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }
+    h2 { margin: 4px 0 10px; color: var(--carbon); font-size: clamp(27px, 4vw, 48px); line-height: 1.1; letter-spacing: -.04em; }
+    h3 { margin: 0 0 8px; color: var(--carbon); font-size: 20px; line-height: 1.2; }
+    h4 { margin: 0 0 5px; color: var(--carbon); font-size: 15px; }
+    .lead { max-width: 790px; margin: 0; color: #4d5d59; font-size: 17px; }
+    .muted { color: var(--muted); }
+    .pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; border-radius: 99px; color: var(--teal); background: var(--teal-soft); font-size: 11px; font-weight: 700; }
+    .pill.amber { color: #87510c; background: var(--amber-soft); }
+    .pill.red { color: #943b32; background: var(--red-soft); }
+    .pill.violet { color: #554580; background: var(--violet-soft); }
+    .hero { display: grid; grid-template-columns: 1.18fr .82fr; gap: 22px; align-items: end; margin-bottom: 24px; }
+    .hero-card { padding: 20px; color: #f4fbf8; background: var(--carbon); border: 1px solid #384b47; border-radius: var(--radius); box-shadow: var(--shadow); }
+    .hero-card .big-rule { margin: 0 0 10px; color: #ffdc8b; font-size: 24px; font-weight: 800; line-height: 1.24; }
+    .hero-card p { margin: 0; color: #c4d4cf; font-size: 13px; }
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .stat { padding: 14px; background: rgba(255,253,248,.72); border: 1px solid var(--line); border-radius: 11px; }
+    .stat b { display: block; color: var(--teal); font-size: 24px; line-height: 1; }
+    .stat span { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 15px; margin: 34px 0 13px; }
+    .section-head p { margin: 0; color: var(--muted); font-size: 13px; }
+    .panel { padding: 18px; background: rgba(255,253,248,.84); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 8px 24px rgba(23,31,29,.04); }
+    .architecture { display: grid; gap: 12px; }
+    .arch-row { display: grid; grid-template-columns: repeat(5, minmax(120px, 1fr)); gap: 10px; align-items: stretch; }
+    .arch-node {
+      min-height: 105px; padding: 14px; color: var(--ink); background: #fbfaf4;
+      border: 1px solid var(--line); border-top: 4px solid var(--teal); border-radius: 11px;
+      text-align: left; transition: transform .18s, box-shadow .18s, border-color .18s;
+    }
+    .arch-node:hover, .arch-node.selected { transform: translateY(-3px); border-color: var(--teal); box-shadow: 0 10px 24px rgba(20,125,117,.14); }
+    .arch-node .kicker { display: block; margin-bottom: 8px; color: var(--teal); font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+    .arch-node strong { display: block; font-size: 15px; }
+    .arch-node small { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; }
+    .arch-node.boss { border-top-color: var(--amber); background: #fff8e8; }
+    .arch-node.boss .kicker { color: var(--amber); }
+    .arch-node.broker { border-top-color: var(--red); background: #fff8f6; }
+    .arch-node.broker .kicker { color: var(--red); }
+    .arch-node.model { border-top-color: var(--violet); background: #fbf9ff; }
+    .arch-node.model .kicker { color: var(--violet); }
+    .arch-node.record { border-top-color: var(--blue); background: #f6fbff; }
+    .arch-node.record .kicker { color: var(--blue); }
+    .connector { display: flex; align-items: center; justify-content: center; min-height: 24px; color: var(--amber); font-size: 20px; font-weight: 800; }
+    .architecture-note { margin: 12px 0 0; padding: 11px 13px; color: #52625e; background: #eef5f0; border-left: 3px solid var(--teal); font-size: 13px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+    .card { padding: 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }
+    .card p { margin: 7px 0 0; color: #5b6965; font-size: 13px; }
+    .card .icon { display: inline-grid; place-items: center; width: 29px; height: 29px; margin-bottom: 10px; color: var(--teal); background: var(--teal-soft); border-radius: 8px; font-size: 14px; font-weight: 800; }
+    .principle { display: grid; grid-template-columns: 32px 1fr; gap: 10px; align-items: start; }
+    .principle .index { color: var(--amber); font-weight: 800; }
+    .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 11px; }
+    table { width: 100%; border-collapse: collapse; min-width: 620px; background: var(--panel); }
+    th, td { padding: 11px 13px; border-bottom: 1px solid #e7e2d8; text-align: left; vertical-align: top; font-size: 13px; }
+    th { color: #596b66; background: #f4f2eb; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    .flow-shell { display: grid; grid-template-columns: 1fr 1.15fr; gap: 18px; }
+    .flow-list { display: grid; gap: 7px; }
+    .flow-btn { display: grid; grid-template-columns: 30px 1fr; gap: 8px; align-items: center; padding: 10px; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 9px; text-align: left; }
+    .flow-btn:hover, .flow-btn.active { color: var(--teal); background: var(--teal-soft); border-color: #9ed4ca; }
+    .flow-number { display: grid; place-items: center; width: 25px; height: 25px; color: #fff; background: var(--teal); border-radius: 50%; font-size: 11px; font-weight: 800; }
+    .flow-btn strong { display: block; font-size: 13px; }
+    .flow-btn small { display: block; color: var(--muted); font-size: 11px; }
+    .flow-detail { min-height: 310px; padding: 22px; color: #eaf6f2; background: var(--carbon); border: 1px solid #3b4d4a; border-radius: 13px; }
+    .flow-detail .step-tag { color: #ffdc8b; font-size: 11px; font-weight: 800; letter-spacing: .1em; }
+    .flow-detail h3 { margin-top: 8px; color: #fff; font-size: 27px; }
+    .flow-detail p { color: #c6d4d0; }
+    .flow-detail ul { margin: 14px 0 0; padding-left: 18px; color: #dceae6; font-size: 13px; }
+    .flow-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+    .light-btn { padding: 8px 11px; color: var(--teal); background: #eef8f5; border: 1px solid #b9dfd9; border-radius: 8px; font-weight: 700; }
+    .risk-card { border-top: 4px solid var(--teal); }
+    .risk-card.yellow { border-top-color: var(--amber); }
+    .risk-card.red { border-top-color: var(--red); }
+    .risk-card h4 { display: flex; justify-content: space-between; gap: 8px; }
+    .risk-card ul { margin: 10px 0 0; padding-left: 17px; color: #5b6965; font-size: 13px; }
+    .model-lane { position: relative; padding: 18px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }
+    .model-lane + .model-lane { margin-top: 10px; }
+    .model-lane h4 { color: var(--violet); }
+    .model-lane.teacher h4 { color: var(--blue); }
+    .model-lane p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+    .memory-stack { display: grid; gap: 7px; }
+    .memory-level { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-left: 4px solid var(--teal); background: #fbfaf4; border-bottom: 1px solid var(--line); }
+    .memory-level:nth-child(2) { border-left-color: var(--blue); } .memory-level:nth-child(3) { border-left-color: var(--violet); } .memory-level:nth-child(4) { border-left-color: var(--amber); } .memory-level:nth-child(5) { border-left-color: var(--red); }
+    .memory-level small { color: var(--muted); font-size: 11px; text-align: right; }
+    .json { margin: 0; padding: 15px; overflow: auto; color: #d5e8e2; background: #1a2625; border-radius: 10px; font: 12px/1.6 Consolas, "맑은 고딕", monospace; }
+    .roadmap { display: grid; grid-template-columns: repeat(6, minmax(130px,1fr)); gap: 8px; }
+    .phase-card { min-height: 165px; padding: 14px; background: var(--panel); border: 1px solid var(--line); border-top: 4px solid var(--teal); border-radius: 10px; }
+    .phase-card:nth-child(2n) { border-top-color: var(--amber); } .phase-card:nth-child(3n) { border-top-color: var(--violet); }
+    .phase-card .phase { color: var(--teal); font-size: 11px; font-weight: 800; }
+    .phase-card p { margin: 7px 0 0; color: var(--muted); font-size: 12px; }
+    .callout { padding: 15px; color: #475b55; background: var(--amber-soft); border: 1px solid #edcf9a; border-radius: 10px; }
+    .callout strong { color: #744907; }
+    .footnote { margin-top: 27px; color: #71807a; font-size: 11px; }
+    .hide-search { display: none !important; }
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: sticky; top: 64px; z-index: 10; height: auto; padding: 8px 12px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .side-note, .legend { display: none; }
+      .nav { display: flex; overflow-x: auto; gap: 5px; }
+      .nav button { min-width: max-content; padding: 8px 10px; }
+      .nav .num { display: none; }
+      main { padding-top: 23px; }
+      .hero, .flow-shell { grid-template-columns: 1fr; }
+      .roadmap { grid-template-columns: repeat(3, minmax(130px,1fr)); }
+    }
+    @media (max-width: 680px) {
+      .topbar { flex-wrap: wrap; padding: 12px 14px; }
+      .brand { min-width: 0; }
+      .top-actions { width: 100%; }
+      .search { flex: 1; width: auto; }
+      .stat-grid, .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .arch-row { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .arch-row .arch-node:last-child { grid-column: 1 / -1; }
+      .roadmap { grid-template-columns: 1fr 1fr; }
+      h2 { font-size: 34px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">J</div>
+        <div><h1>ONTOZION — JARVIS 개인 지능 운영체제</h1><p>헌법 · 판단 · 실행 · 검증 · 기록 · 학습</p></div>
+      </div>
+      <div class="top-actions">
+        <input id="search" class="search" type="search" placeholder="설계도 검색…" aria-label="설계도 검색">
+        <button id="printBtn" class="top-btn" type="button">인쇄</button>
+        <button id="saveBtn" class="save-btn" type="button">HTML 저장</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <p class="side-note"><strong>읽는 순서</strong>왼쪽 메뉴를 누르면 해당 계층만 펼쳐집니다. 박스를 클릭하면 역할과 경계가 오른쪽 설명에 표시됩니다.</p>
+        <nav class="nav" aria-label="설계도 메뉴">
+          <button type="button" data-view="overview" aria-current="page"><span class="num">00</span>전체 그림</button>
+          <button type="button" data-view="constitution"><span class="num">01</span>헌법과 BOSS</button>
+          <button type="button" data-view="harness"><span class="num">02</span>하네스 구성</button>
+          <button type="button" data-view="lifecycle"><span class="num">03</span>요청의 생애</button>
+          <button type="button" data-view="authority"><span class="num">04</span>권한과 승인</button>
+          <button type="button" data-view="models"><span class="num">05</span>모델 협업</button>
+          <button type="button" data-view="memory"><span class="num">06</span>기억과 학습</button>
+          <button type="button" data-view="memory-index"><span class="num">07</span>기억과 색인</button>
+          <button type="button" data-view="model-selection"><span class="num">08</span>모델 선택</button>
+          <button type="button" data-view="records"><span class="num">09</span>실행과 기록</button>
+          <button type="button" data-view="roadmap"><span class="num">10</span>구현 순서</button>
+        </nav>
+        <div class="legend">
+          <span><i class="dot amber"></i>BOSS·헌법</span>
+          <span><i class="dot teal"></i>자비스·하네스</span>
+          <span><i class="dot red"></i>권한·위험 경계</span>
+          <span><i class="dot violet"></i>모델·학습</span>
+        </div>
+      </aside>
+
+      <main>
+        <section class="view active" id="view-overview" data-search="전체 그림 개인 지능 운영체제 자비스 헌법 하네스 실행 기록">
+          <div class="hero">
+            <div>
+              <div class="eyebrow">Interactive blueprint · v1</div>
+              <h2>말하는 AI가 아니라<br>통제 가능한 개인 지능 OS</h2>
+              <p class="lead">BOSS가 목적과 소유권을 갖고, 자비스가 생각하고 계획하며, 제한된 능력으로 장치를 움직이고, 검증된 결과만 기록과 학습으로 남기는 구조입니다.</p>
+            </div>
+            <div class="hero-card">
+              <p class="big-rule">병렬 사고, 단일 실행.</p>
+              <p>모델은 여러 개가 제안할 수 있지만 실제 변경은 권한 중개기와 검증기를 통과한 하나의 계획만 확정합니다.</p>
+            </div>
+          </div>
+          <div class="callout" style="margin-top:14px;background:var(--teal-soft);border-color:#bfe5d9"><strong>ONTOZION의 목적:</strong> BOSS 소유형·분산형·상호학습 개인 AGI 메쉬 생태계를 통해 BOSS의 자기결정 능력과 자유 의지를 보존하고 확장합니다. 여러 컴퓨터의 자비스는 서로 질문하고 배울 수 있지만, 질문만으로 실행 권한이나 헌법 수정 권한을 얻지는 않습니다.</div>
+          <div class="callout" style="margin-top:14px"><strong>공개 범위:</strong> 대표 에이전트와 운영 런타임은 ONTOZION/JARVIS 하나입니다. 외부 범용 에이전트 런타임을 설치·실행·의존성으로 사용하지 않으며, 모든 모델·스킬·MCP·ACP·도구·학습·검증은 JARVIS 하네스 안에서 통제합니다. 여러 모델은 JARVIS의 내부 작업자이고, 여러 컴퓨터의 JARVIS 노드는 승인된 메시지와 근거만 교환합니다.</div>
+          <div class="stat-grid">
+            <div class="stat"><b>01</b><span>최종 소유자<br>BOSS</span></div>
+            <div class="stat"><b>06</b><span>핵심 단계<br>입력→학습</span></div>
+            <div class="stat"><b>3</b><span>실행 통로<br>즉시·계획·승인</span></div>
+            <div class="stat"><b>0</b><span>LLM의 직접<br>관리자 권한</span></div>
+          </div>
+
+          <div class="section-head"><div><div class="eyebrow">Architecture map</div><h3>계층을 클릭해 보세요</h3></div><p>같은 구조를 “권한”과 “판단”으로 나눠 이해합니다.</p></div>
+          <div class="panel architecture">
+            <div class="arch-row">
+              <button class="arch-node boss" type="button" data-detail="boss"><span class="kicker">ROOT AUTHORITY</span><strong>BOSS</strong><small>소유권 · 목적 · 최종 승인</small></button>
+              <button class="arch-node" type="button" data-detail="constitution"><span class="kicker">IMMUTABLE LAW</span><strong>헌법</strong><small>절대 금지선 · 상속 규칙</small></button>
+              <button class="arch-node broker" type="button" data-detail="broker"><span class="kicker">ENFORCEMENT</span><strong>권한 중개기</strong><small>허용·거부 · 토큰 발급</small></button>
+              <button class="arch-node" type="button" data-detail="jarvis"><span class="kicker">ORCHESTRATOR</span><strong>자비스</strong><small>이해 · 계획 · 조정</small></button>
+              <button class="arch-node model" type="button" data-detail="models"><span class="kicker">MODEL POOL</span><strong>모델들</strong><small>SLLM · 오픈웨이트 · 교사</small></button>
+            </div>
+            <div class="connector">↓ 허용된 능력만 전달 ↓</div>
+            <div class="arch-row">
+              <button class="arch-node" type="button" data-detail="memory"><span class="kicker">CONTEXT</span><strong>기억·지식</strong><small>세션 · 개인 · 절차 · 사건</small></button>
+              <button class="arch-node" type="button" data-detail="devices"><span class="kicker">EDGE NODES</span><strong>장치 에이전트</strong><small>Windows · macOS · Linux · 폰</small></button>
+              <button class="arch-node" type="button" data-detail="executors"><span class="kicker">CAPABILITIES</span><strong>실행기</strong><small>브라우저 · CLI · API · 앱</small></button>
+              <button class="arch-node record" type="button" data-detail="verifier"><span class="kicker">EVIDENCE</span><strong>검증기</strong><small>실제 결과 확인</small></button>
+              <button class="arch-node record" type="button" data-detail="ledger"><span class="kicker">TRUTH</span><strong>기록·학습</strong><small>원장 · 스킬 · 회귀시험</small></button>
+            </div>
+            <div id="detailBox" class="architecture-note"><strong>클릭한 박스의 역할이 여기에 표시됩니다.</strong> 처음에는 BOSS부터 눌러 전체 위계를 확인해 보세요.</div>
+          </div>
+
+          <div class="section-head"><div><div class="eyebrow">User experience</div><h3>사용자는 한 문장만 말합니다</h3></div></div>
+          <div class="grid-3">
+            <div class="card"><div class="icon">1</div><h4>말한다</h4><p>“자비스, 매일 아침 보고서를 정리해.”</p></div>
+            <div class="card"><div class="icon">2</div><h4>자비스가 고른다</h4><p>이미 검증된 스킬이면 생각을 반복하지 않고 바로 실행합니다.</p></div>
+            <div class="card"><div class="icon">3</div><h4>증거로 답한다</h4><p>무엇을 했는지와 실제 결과를 음성과 화면으로 보여줍니다.</p></div>
+          </div>
+          <p class="footnote">이 파일은 설계도입니다. 현재 장치에서 모든 항목이 구현·검증됐다는 운영 상태 보고가 아닙니다.</p>
+        </section>
+
+        <section class="view" id="view-constitution" data-search="헌법 BOSS 소유권 원칙 안전 상속">
+          <div class="eyebrow">01 · Constitution</div><h2>헌법은 자비스보다 위에 있습니다</h2>
+          <p class="lead">헌법은 긴 프롬프트가 아니라, 사람이 읽는 원칙과 시스템이 검사하는 규칙을 함께 갖습니다.</p>
+          <div class="section-head"><div><h3>10개의 변하지 않는 원칙</h3></div><p>모델이 바뀌어도 이 계층은 남습니다.</p></div>
+          <div class="grid-2">
+            <div class="card principle"><div class="index">01</div><div><h4>BOSS가 유일한 소유자</h4><p>목적, 소유권, 상속, 긴급 정지는 BOSS만 바꿀 수 있습니다.</p></div></div>
+            <div class="card principle"><div class="index">02</div><div><h4>인간의 의도 우선</h4><p>자비스는 BOSS를 돕지만 BOSS의 가치와 삶을 대신 결정하지 않습니다.</p></div></div>
+            <div class="card principle"><div class="index">03</div><div><h4>로컬 우선</h4><p>개인 자료는 기본적으로 로컬에 두고, 외부 전송은 별도로 분류합니다.</p></div></div>
+            <div class="card principle"><div class="index">04</div><div><h4>최소 권한</h4><p>LLM에 관리자 셸을 주지 않고 허가된 능력만 제공합니다.</p></div></div>
+            <div class="card principle"><div class="index">05</div><div><h4>설명 가능성</h4><p>중요한 행동은 계획, 권한, 결과, 증거를 남깁니다.</p></div></div>
+            <div class="card principle"><div class="index">06</div><div><h4>되돌릴 수 있게</h4><p>가능하면 초안과 미리보기부터 만들고, 확정은 마지막에 합니다.</p></div></div>
+            <div class="card principle"><div class="index">07</div><div><h4>모델 독립</h4><p>오픈웨이트, SLLM, 클라우드 모델을 바꿔도 기억과 스킬은 남습니다.</p></div></div>
+            <div class="card principle"><div class="index">08</div><div><h4>자기 권한 확대 금지</h4><p>자비스는 헌법·권한 중개기·소유권을 스스로 수정할 수 없습니다.</p></div></div>
+            <div class="card principle"><div class="index">09</div><div><h4>상속은 BOSS가 설계</h4><p>후계자와 키 교체 절차는 미리 정하되, 자비스가 임의로 정하지 않습니다.</p></div></div>
+            <div class="card principle"><div class="index">10</div><div><h4>모르면 멈춤</h4><p>실제 결과를 확인하지 못하면 성공으로 기록하지 않고 UNKNOWN으로 남깁니다.</p></div></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-harness" data-search="하네스 구성 온톨로지 의미 기억층 엔티티 관계 그래프 모듈 기억 라우터 검증 실행기">
+          <div class="eyebrow">02 · Harness</div><h2>하네스는 자비스의 운영체제입니다</h2>
+          <p class="lead">모델이 똑똑해도 하네스가 없으면 대화만 합니다. 하네스는 모델을 실제 장치·기억·권한·기록과 연결하는 동시에, 모든 의미 기억을 이해 가능한 온톨로지로 묶는 자비스 OS의 의미 커널입니다.</p>
+          <div class="section-head"><div><h3>구성요소와 역할</h3></div></div>
+          <div class="table-wrap"><table><thead><tr><th>구성요소</th><th>하는 일</th><th>하지 않는 일</th></tr></thead><tbody>
+            <tr><td><strong>입력·세션 관리자</strong></td><td>음성·문자·화면을 세션으로 묶고 호출 이후 문맥을 유지</td><td>사용자의 의도를 임의로 바꾸지 않음</td></tr>
+            <tr><td><strong>기억 관리자</strong></td><td>지금 필요한 개인 기억과 과거 작업을 찾아 제공</td><td>원본 비밀정보를 모델에 무제한 전달하지 않음</td></tr>
+            <tr><td><strong>모델 선택기</strong></td><td>작업 난이도와 개인정보 등급에 맞는 모델 선택</td><td>모델이 직접 외부 행동을 실행하게 하지 않음</td></tr>
+            <tr><td><strong>계획기</strong></td><td>목표를 실행 단계와 조건으로 분해</td><td>권한을 스스로 부여하지 않음</td></tr>
+            <tr><td><strong>권한 중개기</strong></td><td>능력·대상·범위·만료·승인을 빠르게 검사</td><td>새로운 목표를 만들거나 토론하지 않음</td></tr>
+            <tr><td><strong>실행기</strong></td><td>브라우저·CLI·API·앱에 제한된 행동 전달</td><td>권한 없는 셸을 실행하지 않음</td></tr>
+            <tr><td><strong>검증기</strong></td><td>화면·상태·응답·파일을 다시 확인</td><td>출력 문구만 보고 성공 판정하지 않음</td></tr>
+            <tr><td><strong>기록·학습기</strong></td><td>실행 원장, 스킬, 실패 시험, 모델 버전 저장</td><td>실시간 운영 중 기본 모델을 몰래 바꾸지 않음</td></tr>
+          </tbody></table></div>
+          <div class="callout" style="margin-top:14px"><strong>핵심 정의:</strong> 하네스는 권한 중개기 하나가 아닙니다. <strong>온톨로지 커널 + 기억 투영층 + 실행 계약 + 검증·기록 버스</strong>를 합친 자비스의 운영체제입니다. 기억이 온톨로지로 연결되지 않으면 비슷한 문장을 찾는 검색기는 남아도, “누가 무엇을 언제 어떤 권한으로 했는가”를 판단하는 OS 기능은 사라집니다.</div>
+          <div class="section-head"><div><h3>온톨로지 하네스: 의미를 실행 가능한 구조로 바꾸기</h3></div><p>모든 기억층은 같은 객체·관계·시간·근거 계약을 공유합니다.</p></div>
+          <div class="grid-3">
+            <div class="card"><span class="pill">Semantic kernel</span><h4 style="margin-top:10px">객체·관계의 기준</h4><p>사람, BOSS, 가족, 에이전트, 모델, 장치, 앱, 계정, 작업, 스킬, 능력, 정책, 기억, 사건, 근거, 결과를 안정된 ID로 관리합니다.</p></div>
+            <div class="card"><span class="pill violet">Memory projections</span><h4 style="margin-top:10px">기억층의 공통 문법</h4><p>단기·중기·장기·사실 원장은 모두 subject–predicate–object와 시간·출처·확신도·민감도·만료를 갖습니다. 벡터는 원본이 아니라 검색 투영입니다.</p></div>
+            <div class="card"><span class="pill amber">Action contract</span><h4 style="margin-top:10px">행동의 의미·권한 연결</h4><p>계획은 목표 객체, 대상 장치, 필요한 capability, 승인 토큰, 예상 결과와 검증 조건을 온톨로지로 선언한 뒤에만 실행기로 내려갑니다.</p></div>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>온톨로지 객체</th><th>대표 관계</th><th>하네스에서 하는 일</th></tr></thead><tbody>
+            <tr><td><strong>Person / BOSS / FamilyMember</strong></td><td>owns · governs · inherits_from · consents</td><td>누가 소유자이고 누가 상속받을 수 있는지 구분합니다. 가족 상속은 지식 상속이지 자동 실행권 상속이 아닙니다.</td></tr>
+            <tr><td><strong>Agent / Model / Tool / Device</strong></td><td>runs_on · can_invoke · observes · reports_to</td><td>모델이 직접 셸을 부르는 대신 어떤 장치 에이전트가 어떤 도구를 호출하는지 추적합니다.</td></tr>
+            <tr><td><strong>Task / Skill / Event / Outcome</strong></td><td>contains · derived_from · caused · verified_as</td><td>말 한 문장을 실행 그래프와 실제 결과로 연결하고 재사용 가능한 스킬로 승격합니다.</td></tr>
+            <tr><td><strong>Capability / Policy / Approval</strong></td><td>authorized_by · targets · scoped_to · expires_at</td><td>권한의 범위·대상·만료·승인을 결정합니다. 온톨로지가 불명확하면 중개기는 거부합니다.</td></tr>
+            <tr><td><strong>MemoryItem / Evidence / Source</strong></td><td>asserts · supports · contradicts · supersedes</td><td>기억을 사실처럼 덮어쓰지 않고 근거·충돌·최신성을 보존합니다.</td></tr>
+          </tbody></table></div>
+          <div class="section-head"><div><h3>네 기억층이 온톨로지로 되는 방식</h3></div></div>
+          <div class="table-wrap"><table><thead><tr><th>기억층</th><th>온톨로지 프레임</th><th>빠른 색인</th><th>보존·권한</th></tr></thead><tbody>
+            <tr><td>단기</td><td>현재 BOSS·세션·목표·대상·대기 승인·도구 상태</td><td>RAM 키·정확한 상태 조회</td><td>세션 만료, 원본 최소 보존</td></tr>
+            <tr><td>중기</td><td>프로젝트·열린 작업·결정·실패·반복 절차</td><td>시간·프로젝트·task_id·관계 그래프</td><td>TTL·사용자 수정·승격 후보</td></tr>
+            <tr><td>장기</td><td>안정된 선호·사람·장치·절차·가치관</td><td>그래프·벡터·키워드 병렬 검색</td><td>출처·확신도·민감도·승격 승인</td></tr>
+            <tr><td>사실 원장</td><td>원자적 주장, 근거, 반박, 유효기간, 상속 정책</td><td>predicate·as-of·provenance 조회</td><td>append-only 사건 + 정정·삭제 전파</td></tr>
+          </tbody></table></div>
+          <pre class="json">자연어
+  → 엔티티·관계 정규화
+  → 온톨로지 상황 프레임(주체·목표·대상·시간·권한)
+  → 의미 기억 + 정확 상태 + 근거 병렬 조회
+  → 헌법·권한 질의
+  → 계획·capability 토큰
+  → 장치 실행
+  → 관찰된 사건·결과를 원장에 기록
+  → 그래프·벡터·키워드 색인 투영 갱신
+  → 음성·화면 보고</pre>
+          <div class="callout" style="margin-top:14px"><strong>성능 원칙:</strong> 온톨로지 때문에 매번 큰 LLM을 부르지 않습니다. 기준 원장은 append-only 이벤트로 두고, 자주 쓰는 관계는 메모리 캐시·컴파일된 정책 질의로 처리하며, 벡터·키워드·그래프 색인은 비동기로 재생성합니다. 그래서 의미는 정교하게 유지하면서도 단순 작업은 빠른 실행 통로를 탑니다.</div>
+          <div class="callout" style="margin-top:14px;background:var(--teal-soft);border-color:#bfe5d9"><strong>온톨로지 합격 기준:</strong> 모든 의미 기억 쓰기가 안정된 ID·관계·출처·시간을 남길 것, 색인을 삭제 후 원장에서 재생성할 것, 모순을 덮어쓰지 않을 것, capability 관계가 없으면 실행하지 않을 것, 상속 모드가 실행 권한을 자동으로 넓히지 않을 것.</div>
+          <div class="section-head"><div><h3>CodePlan: 로컬 모델은 설계자, 하네스는 실행자</h3></div><p>코드가 소비하는 것은 자유 문장이 아니라 타입이 있는 실행 계획입니다.</p></div>
+          <div class="grid-3">
+            <div class="card"><span class="pill">Reflex lane</span><h4 style="margin-top:10px">소형 로컬 SLLM</h4><p>의도 분류, 엔티티 연결, 반복 작업의 <strong>skill_id</strong> 선택, 간단한 CodePlan을 빠르게 생성합니다.</p></div>
+            <div class="card"><span class="pill violet">Design lane</span><h4 style="margin-top:10px">강한 로컬 오픈 웨이트</h4><p>복잡한 코드 설계·리팩터링·테스트 계획을 만들지만, 파일·셸·관리자 권한은 직접 갖지 않습니다.</p></div>
+            <div class="card"><span class="pill amber">Teacher lane</span><h4 style="margin-top:10px">선택적 클라우드 모델</h4><p>로컬 모델의 확신도가 낮거나 테스트가 반복 실패할 때, 비식별화된 계획을 비평합니다. 직접 실행하지 않습니다.</p></div>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>단계</th><th>결정하는 것</th><th>결정하지 않는 것</th></tr></thead><tbody>
+            <tr><td><strong>CodePlan 생성</strong></td><td>저장소·브랜치·파일·심볼·수정 이유·테스트·제약</td><td>권한 부여·관리자 셸·무제한 파일 변경</td></tr>
+            <tr><td><strong>하네스 컴파일</strong></td><td>스키마·온톨로지·헌법·위험등급·capability 검증</td><td>모델의 설명을 성공 증거로 인정</td></tr>
+            <tr><td><strong>실행기</strong></td><td><strong>repo.search/read/patch/test/diff/rollback</strong> 같은 타입 도구</td><td>자유 문자열을 셸 명령으로 재해석</td></tr>
+            <tr><td><strong>검증기</strong></td><td>컴파일·린트·단위시험·회귀·실제 post-condition</td><td>테스트 실패를 숨기거나 성공으로 포장</td></tr>
+          </tbody></table></div>
+          <pre class="json">{
+  "kind": "code_plan",
+  "repository": "jarvis",
+  "branch": "develop",
+  "files": [{"path": "src/router.py", "symbols": ["route_request"], "operation": "patch"}],
+  "tests": ["python -m compileall src", "tests/test_router.py"],
+  "constraints": ["no_constitution_change", "no_admin_shell"],
+  "capability": "repo.patch",
+  "approval": "policy_scoped"
+}</pre>
+          <div class="callout" style="margin-top:14px"><strong>코딩 성능 원칙:</strong> 저장소·심볼 색인은 미리 만들고, 읽기·검색·독립 테스트는 병렬로 처리합니다. 같은 파일의 쓰기만 직렬화하며, 작은 작업은 SLLM·codemod가 처리하고 복잡한 작업만 강한 로컬 모델로 올립니다. 스키마 실패·낮은 확신도·반복 테스트 실패·새 아키텍처는 교사 모델로 승격합니다.</div>
+          <div class="section-head"><div><h3>분리 배치</h3></div></div>
+          <div class="grid-3">
+            <div class="card"><span class="pill amber">Windows·macOS</span><h4 style="margin-top:10px">조종석</h4><p>음성, 화면, 브라우저, 즉시 반응이 필요한 장치 행동을 담당합니다.</p></div>
+            <div class="card"><span class="pill">Mac·Ubuntu</span><h4 style="margin-top:10px">심장</h4><p>기억, 오케스트레이션, 로컬 모델, 일정, 기록 장부를 계속 유지합니다.</p></div>
+            <div class="card"><span class="pill violet">격리 실험실</span><h4 style="margin-top:10px">훈련장</h4><p>새 모델·스킬·권한 변경을 운영 환경과 분리해 시험합니다.</p></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-lifecycle" data-search="요청 생애 입력 실행 검증 기록 흐름">
+          <div class="eyebrow">03 · Lifecycle</div><h2>한 문장이 결과가 되기까지</h2>
+          <p class="lead">아래 단계를 누르면 각 단계의 책임과 안전선을 확인할 수 있습니다.</p>
+          <div class="section-head"><div><h3>실행 생명주기</h3></div><p>읽기·준비는 병렬, 실제 변경은 한 번만 확정합니다.</p></div>
+          <div class="flow-shell">
+            <div class="flow-list" id="flowList"></div>
+            <div class="flow-detail" id="flowDetail"></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-authority" data-search="권한 승인 위험 결제 거래 삭제 관리자 토큰">
+          <div class="eyebrow">04 · Authority</div><h2>빠르면서도 위험하지 않게</h2>
+          <p class="lead">모든 문장을 승인받는 것이 아니라, 위험한 행동만 멈춰 세우는 구조가 효율성과 안전을 동시에 만듭니다.</p>
+          <div class="section-head"><div><h3>세 가지 실행 통로</h3></div></div>
+          <div class="grid-3">
+            <div class="card risk-card"><h4>녹색 · 즉시 <span class="pill">자동</span></h4><ul><li>파일·웹 읽기</li><li>일정 조회</li><li>로컬 검색</li><li>되돌릴 수 있는 초안</li></ul></div>
+            <div class="card risk-card yellow"><h4>노란색 · 조건부 <span class="pill amber">지속 승인</span></h4><ul><li>브라우저 입력</li><li>파일 이름 변경</li><li>로그인된 서비스의 일반 작업</li><li>정해진 범위 안의 반복 업무</li></ul></div>
+            <div class="card risk-card red"><h4>빨간색 · 확인 <span class="pill red">BOSS</span></h4><ul><li>메일·게시물 외부 발송</li><li>결제·예약·증권 거래</li><li>대량 삭제</li><li>헌법·권한·모델 변경</li></ul></div>
+          </div>
+          <div class="section-head"><div><h3>권한 토큰은 짧고 구체적이어야 합니다</h3></div></div>
+          <pre class="json">{
+  "capability": "browser_read",
+  "target": "approved_sites",
+  "scope": "read_only",
+  "expires_at": "2026-09-22T00:00:00+09:00",
+  "requires_boss": false,
+  "plan_hash": "sha256:..."
+}</pre>
+          <div class="callout" style="margin-top:14px"><strong>원칙:</strong> 자비스에게 관리자 비밀번호를 주지 않습니다. 자비스는 “백업 실행” 같은 제한된 능력을 요청하고, 중개기가 조건을 확인한 뒤 서명된 절차만 실행합니다.</div>
+        </section>
+
+        <section class="view" id="view-models" data-search="모델 SLLM 오픈웨이트 클라우드 교사 병렬 학습">
+          <div class="eyebrow">05 · Model collaboration</div><h2>모델은 역할을 나눠 함께 움직입니다</h2>
+          <p class="lead">모델 여러 개가 의견을 내는 것은 가능하지만, 실제 행동은 검증기와 권한 중개기를 통과한 하나의 계획만 확정합니다.</p>
+          <div class="section-head"><div><h3>역할 분담</h3></div><span class="pill violet">병렬 사고 · 단일 실행</span></div>
+          <div class="model-lane"><h4>개인 SLLM · 빠른 반사신경</h4><p>BOSS의 말투, 습관, 자주 쓰는 스킬, 개인 기억, 낮은 지연이 필요한 반복 작업을 담당합니다.</p></div>
+          <div class="model-lane"><h4>오픈웨이트 LLM · 넓은 사고</h4><p>낯선 문제, 복잡한 분석, 새로운 계획, 모델 교체가 필요한 독립적인 추론을 담당합니다.</p></div>
+          <div class="model-lane teacher"><h4>클라우드 모델 · 교사·비평가</h4><p>민감정보를 제거한 어려운 사례에 해결안·비평·시험을 제공하지만, 직접 도구를 호출하지는 않습니다.</p></div>
+          <div class="section-head"><div><h3>학습 플라이휠</h3></div></div>
+          <div class="panel"><div class="grid-3">
+            <div class="card"><span class="pill">1. 기록</span><p>성공·실패·실행 증거를 로컬에 남깁니다.</p></div>
+            <div class="card"><span class="pill violet">2. 교사</span><p>어려운 사례만 비식별화해 클라우드의 비평을 받습니다.</p></div>
+            <div class="card"><span class="pill">3. 검증</span><p>실제 환경에서 시험을 통과한 결과만 스킬·어댑터로 승격합니다.</p></div>
+          </div></div>
+        </section>
+
+        <section class="view" id="view-memory" data-search="기억 저장소 개인정보 데이터 등급 학습 스킬">
+          <div class="eyebrow">06 · Memory & learning</div><h2>기억은 층으로 나누고, 학습은 검증 후 저장합니다</h2>
+          <p class="lead">모든 대화를 영구 보관하지 않습니다. 필요한 기억과 검증된 작업만 다음 실행에 사용합니다.</p>
+          <div class="section-head"><div><h3>기억 층</h3></div></div>
+          <div class="panel memory-stack">
+            <div class="memory-level"><strong>헌법 기억</strong><small>절대 원칙 · 모든 모델보다 우선</small></div>
+            <div class="memory-level"><strong>정책 기억</strong><small>현재 승인 범위 · 예산 · 만료</small></div>
+            <div class="memory-level"><strong>세션·작업 기억</strong><small>지금 대화와 진행 중인 계획</small></div>
+            <div class="memory-level"><strong>개인·사건 기억</strong><small>취향 · 관계 · 과거 실행과 결과</small></div>
+            <div class="memory-level"><strong>절차·학습 기억</strong><small>반복 스킬 · 실패 사례 · 회귀시험</small></div>
+          </div>
+          <div class="section-head"><div><h3>데이터 등급</h3></div></div>
+          <div class="grid-2">
+            <div class="card"><h4>D0 · 공개</h4><p>필요하면 클라우드 사용 가능. 원본·출처를 기록합니다.</p></div>
+            <div class="card"><h4>D1 · 개인</h4><p>기본 로컬. 외부 전송 시 필요한 부분만 줄여서 보냅니다.</p></div>
+            <div class="card"><h4>D2 · 민감</h4><p>로컬 처리 우선. 외부 전송은 별도 승인과 기록이 필요합니다.</p></div>
+            <div class="card"><h4>D3 · 비밀</h4><p>비밀번호·키·카드 정보. 모델과 클라우드에 원문을 주지 않습니다.</p></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-records" data-search="실행 기록 원장 검증 증거 복구 상태">
+          <div class="eyebrow">07 · Evidence & ledger</div><h2>자비스의 진실은 말이 아니라 기록입니다</h2>
+          <p class="lead">상태 파일은 빠른 화면을 위한 요약이고, 중요한 사실은 추가만 가능한 실행 장부에서 확인합니다.</p>
+          <div class="section-head"><div><h3>작업 상태</h3></div></div>
+          <div class="grid-3">
+            <div class="card"><span class="pill">PROPOSED</span><p>자비스가 계획을 제안했습니다.</p></div>
+            <div class="card"><span class="pill amber">EXECUTING</span><p>허용된 능력이 실행 중입니다.</p></div>
+            <div class="card"><span class="pill">VERIFIED</span><p>실제 화면·상태·응답을 확인했습니다.</p></div>
+            <div class="card"><span class="pill red">BLOCKED</span><p>정책상 실행하지 않았습니다.</p></div>
+            <div class="card"><span class="pill red">FAILED</span><p>실패 원인을 확인했습니다.</p></div>
+            <div class="card"><span class="pill violet">UNKNOWN</span><p>결과를 확인하지 못했습니다. 성공으로 읽지 않습니다.</p></div>
+          </div>
+          <div class="section-head"><div><h3>실행 기록 한 건</h3></div><p>비밀번호·카드번호·원본 비밀정보는 기록하지 않습니다.</p></div>
+          <pre class="json">{
+  "event_id": "evt_20260921_000184",
+  "task_id": "task_20260921_0042",
+  "actor": "jarvis",
+  "constitution_version": "1.0.0",
+  "policy_version": "2026-09-21.3",
+  "model_version": "sllm-0.8.2",
+  "capability": "browser_read",
+  "approval_id": null,
+  "plan_hash": "sha256:...",
+  "evidence": ["screenshot_ref", "http_status"],
+  "status": "verified"
+}</pre>
+          <div class="callout" style="margin-top:14px"><strong>복구 원칙:</strong> 연결이 끊기면 무조건 재실행하지 않습니다. 멱등 키와 원장을 확인하고, 마지막으로 확인된 단계부터 이어갑니다.</div>
+        </section>
+
+        <section class="view" id="view-memory-index" data-search="단기 중기 장기 기억 색인 검색 BM25 벡터 시간 관계망 속도">
+          <div class="eyebrow">07 · Memory indexing</div><h2>필요한 기억을 바로 꺼내는 구조</h2>
+          <p class="lead">기억을 한 통에 넣지 않고 단기·중기·장기·사실 원장으로 나눕니다. 검색은 하나의 색인이 아니라 여러 색인을 동시에 사용합니다.</p>
+          <div class="section-head"><div><h3>기억의 네 층</h3></div><p>현재 작업과 오래 유지할 사실을 섞지 않습니다.</p></div>
+          <div class="grid-2">
+            <div class="card"><span class="pill">단기 · RAM</span><h4 style="margin-top:10px">지금 당장 필요한 것</h4><p>현재 대화, 진행 중 계획, 최근 화면, 미완료 승인. 수분~수시간 유지하고 순서·작업 ID로 바로 찾습니다.</p></div>
+            <div class="card"><span class="pill amber">중기 · 프로젝트</span><h4 style="margin-top:10px">최근 사건과 업무</h4><p>며칠~몇 주의 프로젝트, 결정, 오류, 반복 절차. 날짜·프로젝트·사람·의미를 함께 색인합니다.</p></div>
+            <div class="card"><span class="pill violet">장기 · 지식·스킬</span><h4 style="margin-top:10px">오래 유지할 것</h4><p>취향, 원칙, 검증된 사실, 완성된 스킬. 자동 덮어쓰기를 금지하고 출처와 유효기간을 보존합니다.</p></div>
+            <div class="card"><span class="pill red">사실 원장 · 추가 전용</span><h4 style="margin-top:10px">실제로 일어난 것</h4><p>승인, 실행, 결과, 증거를 기록합니다. 기억과 충돌하면 원장이 실제 실행 여부를 판정합니다.</p></div>
+          </div>
+          <div class="section-head"><div><h3>병렬 색인</h3></div><p>요청 유형에 맞는 색인만 선택해 빠르게 조회합니다.</p></div>
+          <div class="table-wrap"><table><thead><tr><th>색인</th><th>잘 찾는 것</th><th>예시 질문</th></tr></thead><tbody>
+            <tr><td><strong>전문 검색</strong></td><td>파일명·명령어·숫자·정확한 표현</td><td>“지난번에 만든 report_final 파일”</td></tr>
+            <tr><td><strong>의미 검색</strong></td><td>표현은 다르지만 뜻이 같은 기억</td><td>“그때처럼 자동화해”</td></tr>
+            <tr><td><strong>시간 색인</strong></td><td>최근 사건·특정 날짜의 결정</td><td>“어제 중단한 작업”</td></tr>
+            <tr><td><strong>관계망</strong></td><td>사람·프로젝트·파일·도구 연결</td><td>“해윤 프로젝트와 관련된 문서”</td></tr>
+            <tr><td><strong>절차 색인</strong></td><td>반복 스킬·실행 그래프</td><td>“매일 아침 보고서 절차”</td></tr>
+            <tr><td><strong>출처·권한 색인</strong></td><td>근거 위치와 볼 수 있는 모델</td><td>“이 주장의 공식 출처”</td></tr>
+          </tbody></table></div>
+          <div class="section-head"><div><h3>빠른 검색 흐름</h3></div></div>
+          <div class="panel"><div class="grid-3">
+            <div class="card"><span class="pill">1. 분류</span><p>대화·사실·절차·실행 요청인지 결정합니다.</p></div>
+            <div class="card"><span class="pill">2. 병렬 조회</span><p>전문·벡터·시간·관계·출처 색인을 동시에 조회합니다.</p></div>
+            <div class="card"><span class="pill">3. 압축</span><p>권한과 유효기간을 검사한 뒤 최종 3~8개만 모델에 넣습니다.</p></div>
+          </div></div>
+          <div class="callout" style="margin-top:14px"><strong>속도 원칙:</strong> 현재 세션과 자주 쓰는 스킬은 RAM에 미리 올리고, 임베딩·중복 검사·색인 갱신은 답변을 막지 않는 백그라운드 작업으로 처리합니다.</div>
+        </section>
+
+        <section class="view" id="view-model-selection" data-search="중국 모델 검열 오픈웨이트 양자화 Qwen DeepSeek AWQ GPTQ 정직성 사실성">
+          <div class="eyebrow">08 · Model selection</div><h2>중국 오픈웨이트 모델 선정 기준</h2>
+          <p class="lead">“검열 없음”이라는 이름을 믿는 것이 아니라, 로컬 실행·응답 일관성·양자화 성능·사실성 시험을 통과한 버전만 자비스에 등록합니다.</p>
+          <div class="section-head"><div><h3>역할별 후보</h3></div><p>후보일 뿐이며, 실제 자비스 시험 통과 전에는 확정 모델이 아닙니다.</p></div>
+          <div class="grid-3">
+            <div class="card"><span class="pill">빠른 개인 비서</span><h4 style="margin-top:10px">Qwen3 계열</h4><p>일상 대화, 한국어·다국어, 기억 호출, 반복 스킬용 후보입니다. 공식 Base·Instruct와 공식 양자화 변형을 따로 비교합니다.</p></div>
+            <div class="card"><span class="pill violet">깊은 추론</span><h4 style="margin-top:10px">DeepSeek-R1 계열</h4><p>복잡한 계획·코딩·논리 문제용 후보입니다. 기본 대화 통로보다 느린 추론 통로에 배치합니다.</p></div>
+            <div class="card"><span class="pill amber">개인화</span><h4 style="margin-top:10px">개인 SLLM</h4><p>BOSS의 말투·습관·스킬·개인 기억을 담당합니다. 빠른 반사신경이 목적입니다.</p></div>
+          </div>
+          <div class="section-head"><div><h3>양자화 비교 순서</h3></div></div>
+          <div class="roadmap">
+            <div class="phase-card"><div class="phase">BASELINE</div><h4>BF16·FP16</h4><p>원본 성능과 사실성의 기준을 먼저 잽니다.</p></div>
+            <div class="phase-card"><div class="phase">STEP 1</div><h4>FP8·INT8</h4><p>성능 손실이 가장 작은 압축부터 비교합니다.</p></div>
+            <div class="phase-card"><div class="phase">STEP 2</div><h4>Q8</h4><p>대화·도구 호출 신뢰성을 우선합니다.</p></div>
+            <div class="phase-card"><div class="phase">STEP 3</div><h4>Q6</h4><p>속도와 메모리 절약을 함께 봅니다.</p></div>
+            <div class="phase-card"><div class="phase">STEP 4</div><h4>AWQ·GPTQ 4-bit</h4><p>자비스 시험에서 차이가 없을 때만 채택합니다.</p></div>
+            <div class="phase-card"><div class="phase">PROMOTE</div><h4>운영 승격</h4><p>해시·설정·시험 결과를 기록한 뒤 등록합니다.</p></div>
+          </div>
+          <div class="section-head"><div><h3>정직성·검열 행동 시험</h3></div></div>
+          <div class="table-wrap"><table><thead><tr><th>시험</th><th>통과 기준</th></tr></thead><tbody>
+            <tr><td>허용 질문</td><td>불필요한 거부가 적고 질문에 직접 답한다.</td></tr>
+            <tr><td>언어 일관성</td><td>한국어·영어·중국어에서 근거 없이 결론이 뒤집히지 않는다.</td></tr>
+            <tr><td>불확실성</td><td>모르는 정보와 추정을 구분하고 출처를 요구한다.</td></tr>
+            <tr><td>사실성</td><td>검색·계산·공식 자료와 대조했을 때 근거 없는 숫자를 만들지 않는다.</td></tr>
+            <tr><td>도구 보고</td><td>실행하지 않은 일을 완료했다고 말하지 않는다.</td></tr>
+            <tr><td>양자화 회귀</td><td>원본 대비 대화·코드·도구·기억 검색 성능 저하가 기준 이하이다.</td></tr>
+          </tbody></table></div>
+          <div class="callout" style="margin-top:14px"><strong>주의:</strong> 오픈웨이트는 가중치를 실행할 수 있다는 뜻이지, 학습 데이터·후학습 정책·편향이 모두 공개됐다는 뜻은 아닙니다. “검열되지 않음”도 모델 이름이 아니라 자비스의 실제 시험 결과로 판정합니다.</div>
+          <p class="footnote">참고: <a href="https://arxiv.org/abs/2505.09388" target="_blank" rel="noreferrer">Qwen3 기술 보고서</a> · <a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noreferrer">DeepSeek-R1 논문</a> · <a href="https://arxiv.org/abs/2306.00978" target="_blank" rel="noreferrer">AWQ 연구</a> · <a href="https://arxiv.org/abs/2210.17323" target="_blank" rel="noreferrer">GPTQ 연구</a> · <a href="https://arxiv.org/abs/2506.12349" target="_blank" rel="noreferrer">DeepSeek 정보 억제 감사 연구</a></p>
+        </section>
+
+        <section class="view" id="view-roadmap" data-search="구현 순서 로드맵 시험 게이트 완료 기준">
+          <div class="eyebrow">08 · Build order</div><h2>작게 검증하면서 전체로 확장합니다</h2>
+          <p class="lead">모든 기능을 한 번에 만들지 않고, 권한·기록·검증을 먼저 세운 뒤 능력을 늘립니다.</p>
+          <div class="section-head"><div><h3>6단계 구현 순서</h3></div></div>
+          <div class="roadmap">
+            <div class="phase-card"><div class="phase">PHASE 1</div><h4>헌법·원장</h4><p>BOSS, 정책, 실행 기록, 긴급 정지를 고정합니다.</p></div>
+            <div class="phase-card"><div class="phase">PHASE 2</div><h4>대화·기억</h4><p>자연스러운 음성 세션과 로컬 기억을 연결합니다.</p></div>
+            <div class="phase-card"><div class="phase">PHASE 3</div><h4>능력 등록부</h4><p>브라우저·파일·CLI·API를 제한된 능력으로 등록합니다.</p></div>
+            <div class="phase-card"><div class="phase">PHASE 4</div><h4>실행·검증</h4><p>계획, 권한, 실제 결과 확인, 복구를 연결합니다.</p></div>
+            <div class="phase-card"><div class="phase">PHASE 5</div><h4>이중 모델</h4><p>SLLM과 오픈웨이트 모델을 작업별로 분업시킵니다.</p></div>
+            <div class="phase-card"><div class="phase">PHASE 6</div><h4>학습·상속</h4><p>스킬 승격, 회귀시험, 후계자·키 교체 절차를 완성합니다.</p></div>
+          </div>
+          <div class="section-head"><div><h3>완료 판정</h3></div></div>
+          <div class="grid-2">
+            <div class="card"><h4>대화 게이트</h4><p>음성이 끊기지 않고, 호출 세션이 자연스럽게 유지되는가?</p></div>
+            <div class="card"><h4>권한 게이트</h4><p>모델이 관리자 권한을 직접 얻거나 범위를 넓힐 수 없는가?</p></div>
+            <div class="card"><h4>실행 게이트</h4><p>말한 작업이 실제 장치에서 수행되고 결과가 확인되는가?</p></div>
+            <div class="card"><h4>학습 게이트</h4><p>성공한 작업이 스킬·시험·기억으로 재사용되는가?</p></div>
+          </div>
+          <p class="footnote">설계 원칙: 먼저 재고, 통과한 것만 승격하고, 실패는 다음 시험의 재료로 남깁니다.</p>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const detailData = {
+        boss: { title: 'BOSS · 유일한 소유자', body: '목적, 소유권, 헌법, 상속, 긴급 정지를 결정합니다. 자비스보다 느릴 수 있지만 자비스가 대신할 수 없는 권한입니다.', tag: 'ROOT AUTHORITY' },
+        constitution: { title: '헌법 · 바뀌지 않는 금지선', body: '모델이 바뀌어도 유지되는 원칙입니다. 일부는 문장으로, 일부는 중개기와 운영체제 규칙으로 검사합니다.', tag: 'IMMUTABLE LAW' },
+        broker: { title: '권한 중개기 · 작은 안전 게이트', body: '자비스의 계획을 대신 생각하지 않습니다. 능력, 대상, 범위, 만료, 승인, 계획 지문만 빠르게 확인하고 토큰을 발급하거나 거부합니다.', tag: 'ENFORCEMENT' },
+        jarvis: { title: '자비스 · 대표 총괄 에이전트', body: '요청을 이해하고, 기억을 찾고, 모델을 고르고, 계획을 만들고, 실행기를 조정합니다. 실행 권한은 중개기가 정한 범위 안에 있습니다.', tag: 'ORCHESTRATOR' },
+        models: { title: '모델 풀 · 역할별 두뇌', body: '개인 SLLM은 빠른 반사신경, 오픈웨이트 모델은 넓은 사고, 클라우드 모델은 어려운 문제의 교사로 사용합니다.', tag: 'MODEL POOL' },
+        memory: { title: '기억·지식 · 필요한 것만 회상', body: '헌법, 정책, 세션, 개인 기억, 절차, 사건을 층으로 나눕니다. 지금 작업에 필요한 문맥만 꺼냅니다.', tag: 'CONTEXT' },
+        devices: { title: '장치 에이전트 · 운영체제의 손', body: 'Windows·macOS·Linux·폰에 작게 설치됩니다. 자비스에게 관리자 셸을 주는 대신 제한된 능력만 제공합니다.', tag: 'EDGE NODES' },
+        executors: { title: '실행기 · 허가받은 행동만 수행', body: '브라우저, CLI, 파일, API, 앱을 움직입니다. 각 실행에는 입력, 결과, 재시도, 되돌리기 규칙이 붙습니다.', tag: 'CAPABILITIES' },
+        verifier: { title: '검증기 · 실제 결과 확인', body: '출력 문장만 믿지 않고 화면·파일·상태·응답을 다시 봅니다. 확인하지 못하면 성공이 아니라 UNKNOWN으로 남깁니다.', tag: 'EVIDENCE' },
+        ledger: { title: '기록·학습 · 다음 실행의 자산', body: '실행 원장, 승인, 증거, 실패 사례, 스킬, 회귀시험을 쌓습니다. 성공한 작업은 다음부터 고속 경로가 됩니다.', tag: 'TRUTH' }
+      };
+      const detailBox = document.getElementById('detailBox');
+      document.querySelectorAll('[data-detail]').forEach(function (node) {
+        node.addEventListener('click', function () {
+          document.querySelectorAll('[data-detail]').forEach(function (item) { item.classList.remove('selected'); });
+          node.classList.add('selected');
+          const item = detailData[node.dataset.detail];
+          if (item) detailBox.innerHTML = '<strong>' + item.tag + ' · ' + item.title + '</strong><br>' + item.body;
+        });
+      });
+
+      const steps = [
+        { title: '세션 시작', sub: '호출어·사용자·대화 범위', body: '입력은 wake-session으로 묶입니다. 세션 안에서는 같은 요청을 계속 이어가며, 매 문장마다 다시 깨우지 않습니다.', list: ['음성·문자 입력 수신', '세션 토큰 생성', '마이크·출력 상태 확인'] },
+        { title: '의도와 문맥', sub: '무엇을 원하는지 파악', body: 'SLLM이 먼저 의도를 분류하고, 기억 관리자가 필요한 개인 문맥만 찾아옵니다.', list: ['대화인지 행동인지 분류', '개인정보 등급 판정', '관련 기억 회수'] },
+        { title: '계획 작성', sub: '목표를 단계로 분해', body: '익숙한 요청은 저장된 스킬로 바로 이동하고, 새로운 요청만 오픈웨이트 또는 교사 모델의 도움을 받습니다.', list: ['skill_id 검색', '실행 그래프 작성', '전제조건과 예상 결과 지정'] },
+        { title: '권한 검사', sub: '실행 가능한지 결정', body: '권한 중개기가 범위와 만료, 위험 등급, BOSS 승인 여부를 검사합니다. 여기서 거부되면 장치에는 아무것도 전달되지 않습니다.', list: ['능력 토큰 확인', '대상·범위·예산 검사', '필요하면 BOSS에게 한 번만 질문'] },
+        { title: '병렬 실행', sub: '읽기와 준비를 동시에', body: '여러 장치의 읽기 작업과 준비 작업은 병렬로 처리합니다. 실제 변경은 중복 방지를 위해 하나의 확정 단계로 묶습니다.', list: ['브라우저·파일·API 호출', '멱등 키로 중복 방지', '진행 상황 스트리밍'] },
+        { title: '검증', sub: '실제로 됐는지 확인', body: '도구가 “성공”이라고 말한 것만 믿지 않습니다. 화면, 파일, 응답, 상태를 다시 확인하고 증거를 묶습니다.', list: ['before·after 비교', '결과 증거 수집', 'VERIFIED·FAILED·UNKNOWN 판정'] },
+        { title: '보고', sub: '음성과 화면으로 전달', body: '검증된 결과만 BOSS에게 보고합니다. 준비 중인 일과 완료된 일을 구분해 말합니다.', list: ['짧은 음성 응답', '필요한 화면 카드', '다음 선택지 제시'] },
+        { title: '기록과 학습', sub: '다음 실행을 더 빠르게', body: '원장에 실행과 증거를 남기고, 재사용 가능한 절차는 스킬과 회귀시험으로 승격합니다.', list: ['추가 전용 실행 기록', '실패 원인과 시험 저장', '다음부터 고속 경로로 사용'] }
+      ];
+      const flowList = document.getElementById('flowList');
+      const flowDetail = document.getElementById('flowDetail');
+      function renderStep(index) {
+        const step = steps[index];
+        document.querySelectorAll('.flow-btn').forEach(function (button, i) { button.classList.toggle('active', i === index); });
+        flowDetail.innerHTML = '<div class="step-tag">STEP ' + String(index + 1).padStart(2, '0') + ' / ' + steps.length + '</div><h3>' + step.title + '</h3><p>' + step.body + '</p><ul>' + step.list.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul><div class="flow-controls"><button class="light-btn" type="button" data-prev="' + index + '">이전</button><button class="light-btn" type="button" data-next="' + index + '">다음</button></div>';
+        const prev = flowDetail.querySelector('[data-prev]');
+        const next = flowDetail.querySelector('[data-next]');
+        prev.disabled = index === 0; next.disabled = index === steps.length - 1;
+        prev.addEventListener('click', function () { if (index > 0) renderStep(index - 1); });
+        next.addEventListener('click', function () { if (index < steps.length - 1) renderStep(index + 1); });
+      }
+      steps.forEach(function (step, index) {
+        const button = document.createElement('button'); button.className = 'flow-btn'; button.type = 'button';
+        button.innerHTML = '<span class="flow-number">' + (index + 1) + '</span><span><strong>' + step.title + '</strong><small>' + step.sub + '</small></span>';
+        button.addEventListener('click', function () { renderStep(index); }); flowList.appendChild(button);
+      });
+      renderStep(0);
+
+      const navButtons = Array.from(document.querySelectorAll('.nav button'));
+      const views = Array.from(document.querySelectorAll('.view'));
+      function showView(name) {
+        views.forEach(function (view) { view.classList.toggle('active', view.id === 'view-' + name); });
+        navButtons.forEach(function (button) { button.setAttribute('aria-current', String(button.dataset.view === name)); });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      navButtons.forEach(function (button) { button.addEventListener('click', function () { showView(button.dataset.view); }); });
+
+      const search = document.getElementById('search');
+      search.addEventListener('input', function () {
+        const query = search.value.trim().toLowerCase();
+        if (!query) { views.forEach(function (view) { view.classList.remove('hide-search'); }); return; }
+        views.forEach(function (view) { view.classList.toggle('hide-search', !(view.dataset.search || '').toLowerCase().includes(query)); });
+        const first = views.find(function (view) { return !view.classList.contains('hide-search'); });
+        if (first) showView(first.id.replace('view-', ''));
+      });
+
+      document.getElementById('printBtn').addEventListener('click', function () { window.print(); });
+      document.getElementById('saveBtn').addEventListener('click', function () {
+        const html = '<!doctype html>\n' + document.documentElement.outerHTML;
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob); const link = document.createElement('a');
+        link.href = url; link.download = 'jarvis-integrated-design-interactive.html';
+        document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(url);
+      });
+    }());
+  </script>
+</body>
+</html>

@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ONTOZION: an interactive, local-first design blueprint for a personal JARVIS intelligence operating system.">
+  <title>ONTOZION — JARVIS Personal Intelligence OS</title>
+  <style>
+    :root {
+      --bg: #07111f;
+      --panel: #0e1b2f;
+      --panel-2: #12253d;
+      --ink: #e8f0ff;
+      --muted: #9db0ca;
+      --line: #25415f;
+      --cyan: #63d5ff;
+      --green: #69e6a5;
+      --amber: #ffd27a;
+      --red: #ff8f9a;
+      --shadow: 0 18px 60px rgba(0, 0, 0, .27);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 0%, rgba(99, 213, 255, .12), transparent 34rem),
+        radial-gradient(circle at 100% 20%, rgba(105, 230, 165, .08), transparent 30rem),
+        var(--bg);
+      line-height: 1.62;
+    }
+    a { color: var(--cyan); }
+    button, input { font: inherit; }
+    button {
+      color: var(--ink);
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      border-radius: 10px;
+      padding: .6rem .85rem;
+      cursor: pointer;
+    }
+    button:hover, button:focus-visible { border-color: var(--cyan); outline: none; }
+    .shell { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+    aside {
+      position: sticky; top: 0; height: 100vh; overflow: auto;
+      padding: 1.35rem 1rem; border-right: 1px solid var(--line);
+      background: rgba(7, 17, 31, .88); backdrop-filter: blur(12px);
+    }
+    .brand { padding: .2rem .55rem 1.1rem; }
+    .brand h1 { margin: 0; font-size: 1.55rem; letter-spacing: .05em; }
+    .brand p { margin: .35rem 0 0; color: var(--muted); font-size: .86rem; }
+    .nav { display: grid; gap: .35rem; }
+    .nav button { text-align: left; background: transparent; color: var(--muted); }
+    .nav button.active, .nav button:hover { color: var(--ink); background: rgba(99, 213, 255, .1); }
+    .aside-actions { display: grid; gap: .5rem; margin: 1rem .2rem; }
+    .aside-actions input { width: 100%; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 9px; padding: .58rem .7rem; }
+    main { min-width: 0; }
+    .hero { padding: 3.4rem clamp(1.3rem, 5vw, 5rem) 2.2rem; border-bottom: 1px solid var(--line); }
+    .eyebrow { color: var(--cyan); font-size: .78rem; text-transform: uppercase; letter-spacing: .15em; }
+    .hero h2 { max-width: 980px; margin: .5rem 0 1rem; font-size: clamp(2rem, 5vw, 4.5rem); line-height: 1.04; }
+    .hero p { max-width: 850px; color: var(--muted); font-size: 1.08rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1.25rem; }
+    .hero-actions .primary { border-color: var(--cyan); background: var(--cyan); color: #03101c; font-weight: 700; }
+    .content { padding: 2rem clamp(1.3rem, 5vw, 5rem) 4rem; }
+    .view { display: none; max-width: 1180px; animation: rise .24s ease-out; }
+    .view.active { display: block; }
+    @keyframes rise { from { opacity: .25; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+    .view h3 { font-size: 2rem; margin: .2rem 0 .35rem; }
+    .view > .lead { margin-top: 0; max-width: 850px; color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1rem; margin: 1.35rem 0; }
+    .card { grid-column: span 4; padding: 1.05rem; border: 1px solid var(--line); border-radius: 15px; background: linear-gradient(160deg, rgba(18, 37, 61, .93), rgba(14, 27, 47, .93)); box-shadow: var(--shadow); }
+    .card.wide { grid-column: span 8; }
+    .card.full { grid-column: 1 / -1; }
+    .card h4 { margin: 0 0 .45rem; color: var(--cyan); }
+    .card p { margin: .25rem 0; color: var(--muted); }
+    .pill { display: inline-flex; padding: .2rem .5rem; border-radius: 999px; font-size: .75rem; border: 1px solid var(--line); color: var(--muted); }
+    .diagram { display: grid; gap: .8rem; margin: 1.2rem 0; }
+    .diagram-row { display: flex; flex-wrap: wrap; justify-content: center; gap: .65rem; }
+    .node { min-width: 130px; padding: .75rem .85rem; border: 1px solid var(--line); border-radius: 12px; text-align: center; background: var(--panel-2); cursor: pointer; }
+    .node:hover, .node.selected { border-color: var(--cyan); box-shadow: 0 0 0 2px rgba(99, 213, 255, .15); }
+    .node small { display: block; color: var(--muted); font-size: .72rem; }
+    .arrow { color: var(--muted); align-self: center; }
+    .detail { min-height: 5.2rem; margin-top: 1rem; padding: 1rem; border-radius: 12px; background: rgba(99, 213, 255, .07); border: 1px solid rgba(99, 213, 255, .28); }
+    .detail strong { color: var(--cyan); }
+    .list { margin: .5rem 0 0; padding-left: 1.25rem; }
+    .list li { margin: .32rem 0; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: .93rem; }
+    th, td { padding: .7rem .65rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { color: var(--cyan); font-weight: 700; }
+    td { color: var(--muted); }
+    code, pre { font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace; }
+    code { color: #d8f2ff; }
+    pre { overflow: auto; padding: 1rem; border: 1px solid var(--line); border-radius: 12px; background: #06101c; color: #d8e8ff; }
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: .65rem; margin: 1.2rem 0; }
+    .step { min-height: 7rem; padding: .85rem; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); cursor: pointer; }
+    .step.active { border-color: var(--green); background: rgba(105, 230, 165, .09); }
+    .step b { display: block; color: var(--green); font-size: .8rem; }
+    .step span { display: block; margin-top: .25rem; }
+    .step-detail { padding: 1rem; border-left: 3px solid var(--green); background: rgba(105, 230, 165, .07); }
+    .gate { border-left: 3px solid var(--green); padding: .7rem .9rem; margin: .6rem 0; background: rgba(105, 230, 165, .07); }
+    .gate.warn { border-left-color: var(--amber); background: rgba(255, 210, 122, .07); }
+    .gate.stop { border-left-color: var(--red); background: rgba(255, 143, 154, .07); }
+    .muted { color: var(--muted); }
+    .footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .84rem; }
+    @media (max-width: 980px) {
+      .shell { grid-template-columns: 1fr; }
+      aside { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+      .nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .card, .card.wide { grid-column: span 6; }
+      .steps { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 620px) {
+      .nav { grid-template-columns: 1fr; }
+      .card, .card.wide { grid-column: 1 / -1; }
+      .steps { grid-template-columns: 1fr; }
+      .hero { padding-top: 2.2rem; }
+      .diagram-row { display: grid; grid-template-columns: 1fr; }
+      .arrow { transform: rotate(90deg); justify-self: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside>
+      <div class="brand">
+        <h1>ONTOZION</h1>
+        <p>Local-first personal intelligence operating system</p>
+      </div>
+      <div class="aside-actions">
+        <input id="search" type="search" placeholder="Filter sections..." aria-label="Filter sections">
+        <button id="saveBtn" type="button">Save this HTML</button>
+        <button id="printBtn" type="button">Print / export PDF</button>
+      </div>
+      <nav class="nav" aria-label="Blueprint sections">
+        <button data-view="overview" class="active">00 · Overview</button>
+        <button data-view="constitution">01 · Constitution</button>
+        <button data-view="harness">02 · Harness</button>
+        <button data-view="lifecycle">03 · Lifecycle</button>
+        <button data-view="authority">04 · Authority</button>
+        <button data-view="models">05 · Model roles</button>
+        <button data-view="memory">06 · Memory</button>
+        <button data-view="indexing">07 · Indexing</button>
+        <button data-view="selection">08 · Model selection</button>
+        <button data-view="records">09 · Records</button>
+        <button data-view="roadmap">10 · Roadmap</button>
+      </nav>
+    </aside>
+    <main>
+      <header class="hero">
+        <div class="eyebrow">Open-source blueprint · English edition</div>
+        <h2>A personal JARVIS that acts quickly without surrendering human authority.</h2>
+        <p>
+          This design combines a local language model, a durable memory and indexing layer,
+          an explicit authority broker, and verifiable device tools. The goal is not to give an
+          AI unlimited power; it is to make everyday computer work fast while keeping the BOSS
+          (the single human owner) in control.
+        </p>
+        <div class="hero-actions">
+          <button class="primary" data-view-jump="overview">Explore the blueprint</button>
+          <a href="./JARVIS_INTEGRATED_DESIGN_MEMORY_MODELS_2026-09-21.en.md">Open the companion Markdown design</a>
+        </div>
+      </header>
+      <div class="content">
+        <section class="view active" id="view-overview">
+          <h3>00 · Overview</h3>
+          <p class="lead">The control path is deliberately layered: the model proposes, the harness checks, tools execute, and the ledger records what actually happened.</p>
+          <div class="diagram" aria-label="JARVIS architecture map">
+            <div class="diagram-row">
+              <button class="node selected" data-node="boss">BOSS<small>human owner</small></button>
+              <span class="arrow">→</span>
+              <button class="node" data-node="constitution">Constitution<small>non-negotiable rules</small></button>
+              <span class="arrow">→</span>
+              <button class="node" data-node="broker">Authority broker<small>fast policy gate</small></button>
+            </div>
+            <div class="diagram-row">
+              <span class="arrow">↓</span>
+              <button class="node" data-node="jarvis">JARVIS<small>orchestrator</small></button>
+              <span class="arrow">↓</span>
+              <button class="node" data-node="models">Model pool<small>local, SLLM, cloud teacher</small></button>
+            </div>
+            <div class="diagram-row">
+              <button class="node" data-node="memory">Memory + indexes<small>retrieve only what is needed</small></button>
+              <span class="arrow">↔</span>
+              <button class="node" data-node="tools">Device tools<small>browser, shell, screen, phone</small></button>
+              <span class="arrow">↔</span>
+              <button class="node" data-node="ledger">Verifier + ledger<small>evidence and rollback</small></button>
+            </div>
+          </div>
+          <div id="nodeDetail" class="detail"><strong>BOSS</strong> is the only owner of irreversible authority. JARVIS can act autonomously only inside explicit, revocable limits.</div>
+          <div class="grid">
+            <article class="card"><h4>North star</h4><p>Replace tedious Windows, browser, and phone work with natural voice and visible results, while preserving privacy and human veto.</p></article>
+            <article class="card"><h4>Fast path</h4><p>Use small deterministic tools for routine actions. Reserve deeper model reasoning for ambiguity, planning, and recovery.</p></article>
+            <article class="card"><h4>Proof path</h4><p>Every action has a request ID, policy decision, tool result, evidence, and outcome. “The model said so” is not proof.</p></article>
+            <article class="card full"><h4>Purpose: preserve BOSS self-determination</h4><p>ONTOZION is a BOSS-owned, distributed, mutually learning personal AGI mesh. JARVIS nodes on different computers may question and teach one another, so the BOSS does not need to answer every intermediate question.</p><p>Freedom means that the BOSS can understand alternatives, choose, refuse, and revoke. Distributed question rights never grant execution power, administrator access, or permission to rewrite the Constitution.</p></article>
+            <article class="card full"><h4>Public scope</h4><p>The only representative agent and operating runtime is ONTOZION/JARVIS. No external general-purpose agent runtime is installed, executed, or required. All models, skills, MCP/ACP integrations, tools, learning loops, and verifiers remain inside the JARVIS harness; connected services cannot bypass its Constitution or authority broker.</p></article>
+          </div>
+        </section>
+
+        <section class="view" id="view-constitution">
+          <h3>01 · Constitution</h3>
+          <p class="lead">The constitution is a compact policy contract. It is compiled into checks, not left as a prompt that a model may forget.</p>
+          <div class="grid">
+            <article class="card wide"><h4>Ten operating principles</h4>
+              <ol class="list">
+                <li>BOSS authority is explicit, scoped, revocable, and never inferred from silence.</li>
+                <li>Irreversible actions require a fresh approval token, unless a pre-approved narrow policy covers them.</li>
+                <li>Credentials and secrets are referenced through a vault; they never enter prompts or logs.</li>
+                <li>Local/private data stays local by default. Cloud transfer is a separately visible data-flow decision.</li>
+                <li>Every tool call is least-privilege, typed, bounded, and idempotent where possible.</li>
+                <li>Uncertainty causes a pause, a smaller action, or a question; it never silently becomes permission.</li>
+                <li>Verification follows execution. A successful API response is not the same as the desired state.</li>
+                <li>Failures are contained, reversible, and recorded. Repeated failure opens a circuit breaker.</li>
+                <li>Learning may improve suggestions and routing, but cannot rewrite the constitution autonomously.</li>
+                <li>Human override, shutdown, audit, and data export remain available at all times.</li>
+              </ol>
+            </article>
+            <article class="card"><h4>Machine form</h4><p>Policy becomes schemas, allowlists, risk classes, expiry rules, and post-condition tests.</p><pre>{
+  "risk": "financial_order",
+  "scope": "broker:paper",
+  "approval": "fresh_boss_token",
+  "expires_in": 60,
+  "verify": ["order_status", "position_delta"]
+}</pre></article>
+          </div>
+        </section>
+
+        <section class="view" id="view-harness">
+          <h3>02 · Harness</h3>
+          <p class="lead">The harness is JARVIS's operating system: it owns routing, permissions, memory, tools, verification, and records, while an ontology kernel gives every memory layer the same meaning and relationship contract.</p>
+          <table><thead><tr><th>Layer</th><th>Responsibility</th><th>Hard boundary</th></tr></thead><tbody>
+            <tr><td>Voice / UI</td><td>Wake session, interruption, status, visible evidence</td><td>No action before a valid session token</td></tr>
+            <tr><td>Chief orchestrator</td><td>Interpret intent, choose lane, coordinate sub-agents</td><td>Cannot grant itself authority</td></tr>
+            <tr><td>Policy compiler</td><td>Evaluate constitution and risk</td><td>Fail closed on unknown policy</td></tr>
+            <tr><td>Memory fabric</td><td>Short, medium, long, and fact memory with provenance</td><td>Retrieval is scoped to the task</td></tr>
+            <tr><td>Tool adapters</td><td>Browser, shell, files, screen, camera, phone, finance</td><td>Typed inputs, allowlists, rate limits</td></tr>
+            <tr><td>Verifier / ledger</td><td>Check postconditions, receipts, rollback, audit</td><td>No “done” without evidence</td></tr>
+          </tbody></table>
+          <div class="gate"><strong>Core definition:</strong> The harness is not merely an approval proxy. It is the combination of an <strong>ontology kernel, memory projections, action contracts, and a verification/ledger bus</strong>. Without ontology-linked memory, JARVIS may retrieve similar text, but it cannot reliably answer who did what, when, under which authority, with what evidence.</div>
+          <div class="grid">
+            <article class="card"><span class="pill">Semantic kernel</span><h4>Objects and relationships</h4><p>Stable IDs represent people, BOSS, family members, agents, models, devices, apps, accounts, tasks, skills, capabilities, policies, memories, events, evidence, and outcomes.</p></article>
+            <article class="card"><span class="pill">Memory projections</span><h4>One grammar for every tier</h4><p>Short-, medium-, long-term, and fact-ledger memory all use subject–predicate–object plus time, source, confidence, sensitivity, and expiry. Vectors are search projections, not the source of truth.</p></article>
+            <article class="card"><span class="pill">Action contract</span><h4>Meaning becomes executable</h4><p>A plan declares its goal object, target device, required capability, approval token, expected outcome, and verification condition before it reaches an executor.</p></article>
+          </div>
+          <table><thead><tr><th>Ontology object</th><th>Representative relationships</th><th>Harness purpose</th></tr></thead><tbody>
+            <tr><td><strong>Person / BOSS / FamilyMember</strong></td><td>owns · governs · inherits_from · consents</td><td>Separates the owner from successors. Family inheritance transfers knowledge, not automatic execution power.</td></tr>
+            <tr><td><strong>Agent / Model / Tool / Device</strong></td><td>runs_on · can_invoke · observes · reports_to</td><td>Tracks which device agent invokes which tool instead of allowing a model to call an arbitrary shell.</td></tr>
+            <tr><td><strong>Task / Skill / Event / Outcome</strong></td><td>contains · derived_from · caused · verified_as</td><td>Connects a spoken request to an execution graph and a reusable, tested skill.</td></tr>
+            <tr><td><strong>Capability / Policy / Approval</strong></td><td>authorized_by · targets · scoped_to · expires_at</td><td>Defines scope, target, expiry, and approval. An unclear relation is a denial.</td></tr>
+            <tr><td><strong>MemoryItem / Evidence / Source</strong></td><td>asserts · supports · contradicts · supersedes</td><td>Preserves sources, contradictions, and freshness instead of silently overwriting facts.</td></tr>
+          </tbody></table>
+          <h4>How every memory tier becomes ontology-aware</h4>
+          <table><thead><tr><th>Tier</th><th>Ontology frame</th><th>Fast indexes</th><th>Retention and authority</th></tr></thead><tbody>
+            <tr><td>Short-term</td><td>Current BOSS, session, goal, target, pending approval, and tool state</td><td>RAM keys and exact state queries</td><td>Session expiry, minimal raw retention</td></tr>
+            <tr><td>Medium-term</td><td>Projects, open tasks, decisions, failures, and recurring procedures</td><td>Time, project, task ID, and graph relations</td><td>TTL, user edits, promotion candidates</td></tr>
+            <tr><td>Long-term</td><td>Stable preferences, people, devices, procedures, and values</td><td>Graph, vector, and lexical retrieval in parallel</td><td>Source, confidence, sensitivity, promotion review</td></tr>
+            <tr><td>Fact ledger</td><td>Atomic claims, evidence, rebuttals, validity, and succession policy</td><td>Predicate, as-of, and provenance queries</td><td>Append-only events plus correction/deletion propagation</td></tr>
+          </tbody></table>
+          <pre>natural language
+  → entity and relationship normalization
+  → ontology situation frame (actor · goal · target · time · authority)
+  → semantic memory + exact state + evidence in parallel
+  → Constitution and authority query
+  → plan + capability token
+  → device execution
+  → observed event and outcome in the ledger
+  → graph, vector, and lexical projections refreshed
+  → voice and UI report</pre>
+          <div class="gate"><strong>Performance rule:</strong> Ontology does not mean calling a large LLM for every action. Keep an append-only canonical event store, cache hot relations, compile frequent policy queries, and rebuild vector/lexical/graph projections asynchronously. Meaning stays precise while routine work remains on the fast lane.</div>
+          <div class="gate"><strong>Ontology acceptance gate:</strong> every semantic memory write has a stable ID, relationship, source, and time; indexes can be rebuilt from the canonical store; contradictions are explicit; no capability relation means no execution; and inheritance never broadens execution authority automatically.</div>
+          <h4>CodePlan: local models design, the harness executes</h4>
+          <p class="muted">The code-facing protocol is a typed execution plan, not a free-form paragraph.</p>
+          <div class="grid">
+            <article class="card"><span class="pill">Reflex lane</span><h4>Small local SLLM</h4><p>Classifies intent, links entities, selects a tested <code>skill_id</code>, and emits simple CodePlans with low latency.</p></article>
+            <article class="card"><span class="pill">Design lane</span><h4>Strong local open-weight model</h4><p>Designs complex code changes, refactors, and test plans, but never owns files, shells, or administrator authority.</p></article>
+            <article class="card"><span class="pill">Teacher lane</span><h4>Selective cloud model</h4><p>Critiques a redacted plan when local confidence is low or tests repeatedly fail. It never executes local tools directly.</p></article>
+          </div>
+          <table><thead><tr><th>Stage</th><th>Decides</th><th>Does not decide</th></tr></thead><tbody>
+            <tr><td><strong>CodePlan generation</strong></td><td>Repository, branch, files, symbols, change reason, tests, and constraints</td><td>Authority, administrator shells, or unlimited file changes</td></tr>
+            <tr><td><strong>Harness compilation</strong></td><td>Schema, ontology, Constitution, risk, and capability checks</td><td>Treating the model's explanation as proof</td></tr>
+            <tr><td><strong>Executor</strong></td><td>Typed tools such as <code>repo.search/read/patch/test/diff/rollback</code></td><td>Reinterpreting free text as a shell command</td></tr>
+            <tr><td><strong>Verifier</strong></td><td>Compile, lint, unit, regression, and real post-condition checks</td><td>Hiding failures or declaring success from a sentence</td></tr>
+          </tbody></table>
+          <pre>{
+  "kind": "code_plan",
+  "repository": "jarvis",
+  "branch": "develop",
+  "files": [{"path": "src/router.py", "symbols": ["route_request"], "operation": "patch"}],
+  "tests": ["python -m compileall src", "tests/test_router.py"],
+  "constraints": ["no_constitution_change", "no_admin_shell"],
+  "capability": "repo.patch",
+  "approval": "policy_scoped"
+}</pre>
+          <div class="gate"><strong>Coding performance rule:</strong> Pre-index the repository and symbols; run independent reads and tests in parallel; serialize writes to the same file; use SLLM or codemods for small changes; and escalate only complex design, low confidence, repeated test failure, or a new architecture to the stronger model or teacher.</div>
+          </section>
+
+        <section class="view" id="view-lifecycle">
+          <h3>03 · Lifecycle</h3>
+          <p class="lead">Click a stage to see the expected hand-off. The same request ID follows the work from voice to ledger.</p>
+          <div id="lifecycleSteps" class="steps"></div>
+          <div id="lifecycleDetail" class="step-detail"></div>
+          <div class="grid">
+            <article class="card"><h4>Fast lane</h4><p>Wake → classify → deterministic tool → verify → report. Target routine actions with low latency.</p></article>
+            <article class="card"><h4>Deep lane</h4><p>Plan → retrieve evidence → delegate → simulate → request approval → execute → verify.</p></article>
+            <article class="card"><h4>Recovery lane</h4><p>Detect mismatch → stop retries → capture evidence → repair or ask. Never hide a partial result.</p></article>
+          </div>
+        </section>
+
+        <section class="view" id="view-authority">
+          <h3>04 · Authority</h3>
+          <p class="lead">The authority broker is not a second boss and not a second conversational agent. It is a narrow, fast enforcement layer below the constitution and above tools.</p>
+          <div class="grid">
+            <article class="card"><h4>Green · pre-authorized</h4><p>Read local files, summarize, search approved sites, move a window, create a draft, or run a reversible test inside a fixed scope.</p></article>
+            <article class="card"><h4>Amber · confirm or simulate</h4><p>Send a message, change a setting, install software, use a credential, or touch an external account. Show the exact proposed action.</p></article>
+            <article class="card"><h4>Red · BOSS only</h4><p>Financial orders, irreversible deletion, legal commitments, public publication, new data-sharing scope, and policy changes.</p></article>
+          </div>
+          <div class="gate"><strong>Performance rule:</strong> cache signed policy decisions for a narrow scope and short expiry. Routine green actions take one local check; they do not wait for a large model.</div>
+          <div class="gate warn"><strong>Safety rule:</strong> a cached decision cannot broaden scope, survive expiry, or authorize a different target.</div>
+          <div class="gate stop"><strong>Stop rule:</strong> unknown actor, changed target, stale token, policy mismatch, or unverifiable postcondition means stop and surface the reason.</div>
+        </section>
+
+        <section class="view" id="view-models">
+          <h3>05 · Model roles</h3>
+          <p class="lead">Use multiple models by role, not by prestige. A local model protects privacy and provides continuity; a cloud teacher can expand capability without becoming the owner.</p>
+          <table><thead><tr><th>Model</th><th>Best use</th><th>Cannot do alone</th></tr></thead><tbody>
+            <tr><td>Open-weight local LLM</td><td>Private reasoning, retrieval, routine dialogue, offline continuity</td><td>Grant authority, bypass tools, or rewrite policy</td></tr>
+            <tr><td>Personal SLLM</td><td>User style, procedures, tool schemas, recurring preferences, compact routing</td><td>Invent permissions or learn secrets from raw logs</td></tr>
+            <tr><td>Cloud frontier teacher</td><td>Hard cases, critique, synthetic examples, distillation targets</td><td>Receive sensitive data by default or directly execute local actions</td></tr>
+            <tr><td>Verifier models / rules</td><td>Schema, safety, factual, and postcondition checks</td><td>Replace the BOSS or conceal disagreement</td></tr>
+          </tbody></table>
+          <div class="card full"><h4>Learning loop</h4><p>Local models collect approved, redacted traces → teacher critiques selected examples → SLLM learns stable procedures and routing → offline tests and canary deployment measure regression → the BOSS approves promotion.</p></div>
+        </section>
+
+        <section class="view" id="view-memory">
+          <h3>06 · Memory</h3>
+          <p class="lead">Memory is a tiered, evidence-bearing system. It should recall the smallest useful context, not dump an entire life into every prompt.</p>
+          <div class="grid">
+            <article class="card"><h4>Short-term</h4><p>Current turn, wake session, active tool results, interruption state. RAM-first, automatically expires.</p></article>
+            <article class="card"><h4>Medium-term</h4><p>Current project, recent decisions, open tasks, temporary goals. TTL and user-editable summaries.</p></article>
+            <article class="card"><h4>Long-term</h4><p>Stable preferences, procedures, people, places, and lessons. Promote only with provenance and confidence.</p></article>
+            <article class="card wide"><h4>Fact ledger</h4><p>Atomic facts with source, timestamp, confidence, owner, sensitivity, expiry, and contradiction links. A model may suggest a fact; the ledger decides whether it is trusted.</p></article>
+          </div>
+          <table><thead><tr><th>Data class</th><th>Default route</th><th>Example</th></tr></thead><tbody>
+            <tr><td>D0 public</td><td>Local or cloud</td><td>Public documentation</td></tr>
+            <tr><td>D1 personal</td><td>Local first</td><td>Preferences and project notes</td></tr>
+            <tr><td>D2 sensitive</td><td>Local only unless explicitly approved</td><td>Screen, mail, credentials metadata</td></tr>
+            <tr><td>D3 secret</td><td>Vault reference only</td><td>Passwords, tokens, private keys</td></tr>
+          </tbody></table>
+        </section>
+
+        <section class="view" id="view-indexing">
+          <h3>07 · Indexing</h3>
+          <p class="lead">Fast recall comes from parallel, specialized indexes and a small retrieval budget, not from asking one model to remember everything.</p>
+          <div class="grid">
+            <article class="card"><h4>Lexical</h4><p>Exact names, commands, error strings, and BM25-style search.</p></article>
+            <article class="card"><h4>Semantic</h4><p>Embeddings for paraphrases and conceptual similarity. Store model/version metadata.</p></article>
+            <article class="card"><h4>Temporal</h4><p>Recent, active, expired, and “as-of” queries with timezone-aware timestamps.</p></article>
+            <article class="card"><h4>Graph</h4><p>People, projects, devices, permissions, dependencies, and contradiction edges.</p></article>
+            <article class="card"><h4>Procedure</h4><p>Successful tool recipes with preconditions, steps, postconditions, and rollback.</p></article>
+            <article class="card"><h4>Provenance</h4><p>Source, consent, sensitivity, confidence, and deletion lineage.</p></article>
+          </div>
+          <pre>query → classify → parallel retrieve → merge by score + freshness
+      → policy filter → small context pack → model → evidence check</pre>
+          <div class="gate"><strong>Retrieval contract:</strong> return citations, confidence, expiry, and why each item was included. If no item clears the threshold, say “unknown” and ask for a source.</div>
+        </section>
+
+        <section class="view" id="view-selection">
+          <h3>08 · Model selection</h3>
+          <p class="lead">Choose on measured task quality, latency, privacy, and license—not on a model label alone. Quantization must be benchmarked on the actual JARVIS workload.</p>
+          <table><thead><tr><th>Candidate</th><th>Role to test</th><th>Audit questions</th></tr></thead><tbody>
+            <tr><td>Qwen3 family</td><td>General local dialogue, tool use, multilingual routing</td><td>Tool-call accuracy, Korean quality, long-context recall, license obligations</td></tr>
+            <tr><td>DeepSeek-R1 family</td><td>Reasoning teacher or difficult local reasoning</td><td>Latency, verbosity, refusal behavior, reasoning trace handling, license</td></tr>
+            <tr><td>Personal SLLM</td><td>Stable private procedures and user-specific routing</td><td>Regression, data leakage, forgetting, calibration, rollback</td></tr>
+          </tbody></table>
+          <div class="grid">
+            <article class="card"><h4>Quantization ladder</h4><p>Start with BF16/FP16 reference → FP8/INT8 → Q8 → Q6 → AWQ/GPTQ 4-bit only if quality and tool reliability remain within the acceptance budget.</p></article>
+            <article class="card"><h4>Honesty audit</h4><p>Probe factual stability, uncertainty, refusal consistency, multilingual parity, censorship or omission patterns, and whether the model admits missing evidence.</p></article>
+            <article class="card"><h4>Public sources</h4><p><a href="https://arxiv.org/abs/2505.09388">Qwen3</a> · <a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1</a> · <a href="https://arxiv.org/abs/2506.12349">information-suppression audit</a> · <a href="https://arxiv.org/abs/2306.00978">AWQ</a> · <a href="https://arxiv.org/abs/2210.17323">GPTQ</a></p></article>
+          </div>
+        </section>
+
+        <section class="view" id="view-records">
+          <h3>09 · Records</h3>
+          <p class="lead">The ledger separates intent, authority, execution, evidence, and learning. It is the antidote to “the assistant sounded confident, so it must have happened.”</p>
+          <pre>{
+  "request_id": "uuid",
+  "wake_session": "scoped-token",
+  "intent": {"summary": "draft a reply", "confidence": 0.94},
+  "policy": {"decision": "allow", "rule": "green.draft", "expires_at": "timestamp"},
+  "tool_calls": [{"tool": "browser", "target": "approved-domain", "status": "ok"}],
+  "evidence": [{"type": "screenshot_hash", "value": "redacted"}],
+  "outcome": "verified",
+  "learning": {"eligible": true, "redactions": ["private_content"]}
+}</pre>
+          <div class="grid">
+            <article class="card"><h4>State machine</h4><p><span class="pill">proposed</span> → <span class="pill">authorized</span> → <span class="pill">running</span> → <span class="pill">verified</span> or <span class="pill">contained_failure</span></p></article>
+            <article class="card"><h4>Privacy</h4><p>Keep raw audio, screen frames, and credentials out of ordinary logs. Store hashes, summaries, and consent references where possible.</p></article>
+            <article class="card"><h4>Rollback</h4><p>Every mutating adapter declares a rollback or a clear “irreversible” label before it can be promoted.</p></article>
+          </div>
+        </section>
+
+        <section class="view" id="view-roadmap">
+          <h3>10 · Roadmap</h3>
+          <p class="lead">Build from measurable foundations. Do not call the system AGI because it can produce a fluent answer; promote it only when the gates pass.</p>
+          <div class="grid">
+            <article class="card"><h4>Phase 1 · foundation</h4><p>Local runtime, vault references, request IDs, constitution compiler, kill switch, audit ledger.</p></article>
+            <article class="card"><h4>Phase 2 · fast tools</h4><p>Typed browser, file, shell, and window adapters with postcondition verification.</p></article>
+            <article class="card"><h4>Phase 3 · memory</h4><p>Tiered stores, fact ledger, parallel indexes, provenance, TTL, contradiction handling.</p></article>
+            <article class="card"><h4>Phase 4 · voice and vision</h4><p>Wake-scoped full duplex, AEC/barge tests, privacy-bounded screen and camera observation.</p></article>
+            <article class="card"><h4>Phase 5 · learning</h4><p>Approved traces, teacher critique, SLLM distillation, offline replay, canary promotion.</p></article>
+            <article class="card"><h4>Phase 6 · resilient autonomy</h4><p>Failure recovery, provider failover, multi-device coordination, red-team and physical E2E gates.</p></article>
+          </div>
+          <div class="gate"><strong>Release gate:</strong> no critical safety regression, no secret leakage, no unverified irreversible action, and real-device evidence for voice, browser, and recovery paths.</div>
+          <div class="gate warn"><strong>Open-source gate:</strong> choose a repository license, preserve each model's original license, remove local paths and secrets, and publish only synthetic or redacted examples.</div>
+          <div class="footer">This English edition is a design proposal, not a claim that every component is implemented or safe for unattended production. Test on the target device and review third-party model licenses before deployment.</div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script>
+    (function () {
+      const buttons = Array.from(document.querySelectorAll(".nav button"));
+      const views = Array.from(document.querySelectorAll(".view"));
+      const search = document.getElementById("search");
+      const detail = document.getElementById("nodeDetail");
+      const nodeData = {
+        boss: ["BOSS", "The single human owner. Defines values, approves high-risk scope, can revoke access, inspect records, and stop the system."],
+        constitution: ["Constitution", "A versioned policy contract compiled into risk classes, schemas, allowlists, expiry rules, and postcondition tests."],
+        broker: ["Authority broker", "A narrow enforcement layer. It checks a scoped token and policy decision quickly; it cannot invent authority or change the constitution."],
+        jarvis: ["JARVIS", "The chief orchestrator. It understands requests, retrieves context, chooses tools or sub-agents, and reports evidence without owning irreversible power."],
+        models: ["Model pool", "A role-based set of local, personal SLLM, cloud-teacher, and verifier models. Routing is measured and reversible."],
+        memory: ["Memory + indexes", "Tiered memory plus lexical, semantic, temporal, graph, procedure, and provenance indexes. Retrieval is minimal and scoped."],
+        tools: ["Device tools", "Typed adapters for browser, shell, files, screen, camera, phone, and finance. Each has least privilege, limits, and verification."],
+        ledger: ["Verifier + ledger", "Postcondition checks, receipts, rollback, privacy filtering, and a durable account of what was proposed, executed, and proven."]
+      };
+      function showView(name) {
+        views.forEach(function (view) { view.classList.toggle("active", view.id === "view-" + name); });
+        buttons.forEach(function (button) { button.classList.toggle("active", button.dataset.view === name); });
+        if (history.replaceState) history.replaceState(null, "", "#" + name);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      buttons.forEach(function (button) { button.addEventListener("click", function () { showView(button.dataset.view); }); });
+      document.querySelectorAll("[data-view-jump]").forEach(function (button) {
+        button.addEventListener("click", function () { showView(button.dataset.viewJump); });
+      });
+      document.querySelectorAll("[data-node]").forEach(function (node) {
+        node.addEventListener("click", function () {
+          document.querySelectorAll("[data-node]").forEach(function (item) { item.classList.remove("selected"); });
+          node.classList.add("selected");
+          const item = nodeData[node.dataset.node];
+          detail.innerHTML = "<strong>" + item[0] + "</strong> " + item[1];
+        });
+      });
+      search.addEventListener("input", function () {
+        const query = search.value.trim().toLowerCase();
+        buttons.forEach(function (button) {
+          button.hidden = query && !button.textContent.toLowerCase().includes(query);
+        });
+      });
+      const lifecycle = [
+        ["01", "Session", "Wake word or explicit UI creates a scoped session token. No token, no assistant output or tool action."],
+        ["02", "Intent + context", "Transcribe, identify the user's goal, retrieve only task-relevant memory, and expose uncertainty."],
+        ["03", "Plan", "Choose a fast, deep, or recovery lane. Produce typed tool intents rather than free-form shell text."],
+        ["04", "Authority", "Run the constitution and broker checks. Ask only when risk, target, or scope requires it."],
+        ["05", "Execute", "Run tools in parallel where independent, with timeouts, idempotency keys, and bounded retries."],
+        ["06", "Verify", "Inspect postconditions, receipts, screen state, or API state. A tool exit code alone is insufficient."],
+        ["07", "Report", "Speak plainly: completed, partially completed, blocked, or unknown. Include the next safe step."],
+        ["08", "Learn", "Redact eligible traces, score the outcome, and promote only tested improvements."]
+      ];
+      const stepBox = document.getElementById("lifecycleSteps");
+      const stepDetail = document.getElementById("lifecycleDetail");
+      function renderStep(index) {
+        stepBox.innerHTML = lifecycle.map(function (step, i) {
+          return "<button class='step" + (i === index ? " active" : "") + "' data-step='" + i + "'><b>" + step[0] + "</b><span>" + step[1] + "</span></button>";
+        }).join("");
+        stepDetail.innerHTML = "<strong>" + lifecycle[index][0] + " · " + lifecycle[index][1] + "</strong><br>" + lifecycle[index][2];
+        stepBox.querySelectorAll("[data-step]").forEach(function (button) {
+          button.addEventListener("click", function () { renderStep(Number(button.dataset.step)); });
+        });
+      }
+      renderStep(0);
+      document.getElementById("saveBtn").addEventListener("click", function () {
+        const blob = new Blob(["<!doctype html>\\n" + document.documentElement.outerHTML], { type: "text/html;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url; link.download = "jarvis-integrated-design-interactive.en.html"; link.click();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      });
+      document.getElementById("printBtn").addEventListener("click", function () { window.print(); });
+      const hash = location.hash.replace("#", "");
+      if (hash && document.getElementById("view-" + hash)) showView(hash);
+    }());
+  </script>
+</body>
+</html>
