@@ -525,6 +525,45 @@ P95 latency                   better than baseline
 
 JARVIS never receives the administrator password. It requests a bounded capability such as `backup_project`; the broker checks scope and expiry, then runs a signed procedure.
 
+### 13.1 Proactive household and finance housekeeping
+
+JARVIS should not wait for BOSS to notice every repetitive nuisance. It can inspect
+local, consented records and follow **discover → propose → prepare → bounded execution
+→ verify**. Discovery and recommendations are broad; movement of money or loss of a
+right remains policy-bound.
+
+| Area | What JARVIS may do first | Execution boundary |
+|---|---|---|
+| Subscriptions | Find 30-day non-use, cost, family sharing, and cancellation fees; propose cancellation and prepare the page | Auto-cancel only under a BOSS rule with no fee or benefit loss |
+| Coupons and points | Find expiry dates, conditions, and conversion options; alert and prepare candidates | BOSS confirmation for third-party transfer, conversion loss, or changed terms |
+| Bank accounts | Find dormant accounts, standing payments, balances, and linked services; propose an order of cleanup | Closure, transfer, and withdrawal always require a current review and BOSS authorization |
+| Investments | Present candidates with data timestamps, evidence, risks, and alternatives | Orders require an explicit strategy, amount/loss limits, and order confirmation |
+
+“Invest when conditions are good” is not an executable rule. Define an asset universe,
+maximum amount, daily cap, loss limit, no-leverage rule, expiry, and stop conditions in a
+machine-checkable policy first. JARVIS may proactively surface candidates, but it may not
+turn an unspoken model judgment into new authority. Prefer read-only official finance APIs;
+use browser automation only for preparation when no suitable API exists.
+
+### 13.2 Passkeys and the credential broker
+
+A passkey is not an encrypted password file; it is public-key/private-key authentication.
+The private key is used by Windows Hello/TPM, macOS Secure Enclave, or a FIDO security key.
+The LLM receives neither the password nor the private key. It sees only an opaque reference
+such as `account_ref=approved_bank_main` and a bounded request.
+
+1. JARVIS requests `login(account_ref)`.
+2. The credential broker checks the site, target, and expiry.
+3. The platform authenticator signs the challenge using BOSS PIN/biometric or a security key.
+4. The broker issues a short capability such as `read_only`, `subscription_cancel`, or `order_draft`.
+5. Receipts, results, and failures go to the ledger; passwords, passkeys, and card numbers do not.
+
+If a site lacks passkey support, a local credential store may inject a password ephemerally,
+but it must never enter prompts, voice transcripts, or ordinary logs. An already logged-in
+browser session is not unlimited authority: finance tools separate read, draft, and execute
+verbs. CAPTCHA, MFA, and identity checks are never bypassed; they are handed to BOSS. For
+strict local-only storage, select a device-bound, non-synced passkey.
+
 ## 14. Execution states and records
 
 ```text
