@@ -46,12 +46,63 @@ ONTOZION exists to build a **BOSS-owned, distributed, mutually learning personal
 mesh** that preserves and extends the BOSS's ability to choose for himself. JARVIS
 nodes on different computers can question, challenge, and teach one another, so
 research, design, testing, and learning do not require the BOSS to answer every
-intermediate question.
+intermediate question. This is not only an automation utility: it is the starting
+point for a distributed intelligence society that shares different languages,
+cultural contexts, and specialist perspectives while improving its knowledge and
+norms under a common safety contract.
 
 Freedom here does not mean that JARVIS may act without limits. It means that the BOSS
 can understand alternatives, choose, refuse, and revoke. Approved nodes may share the
 right to ask questions, but a question never grants execution power, administrator
 access, or authority to rewrite the Constitution.
+
+### ONTOZION's social reason: a multilingual, multicultural AGI mesh civilization
+
+Human societies expanded knowledge by asking, translating, disagreeing, and
+cooperating across languages, cultures, and lived experience. ONTOZION applies that
+pattern to JARVIS nodes on separate computers. Each node preserves its language,
+cultural context, and specialist role while learning with the others. “Race” here is
+not a ranking attribute for software; it means respectful language, history, and
+norm profiles that must never be treated as a source of superior authority.
+
+The concrete practice is:
+
+1. **One JARVIS node per computer:** install local STT/TTS, local models, the ontology
+   memory, and the Agent Supervisor on Windows, macOS, or Linux.
+2. **BOSS-controlled pairing:** register `node_id`, the BOSS public key, locale,
+   language/culture and specialist profiles, allowed capabilities, data classes, and
+   model inventory. Pairing completes only with BOSS-approved signatures and mutual
+   TLS; arbitrary nodes cannot join automatically.
+3. **Shared language with cultural overlays:** all nodes use the common ontology and
+   typed messages while retaining source text, translation, uncertainty, and cultural
+   interpretation. Translation cannot rewrite a norm; a value conflict becomes a
+   `CHALLENGE` for BOSS policy.
+4. **Human-sparse intermediate dialogue:** once BOSS sets the topic, goal, and red
+   lines, nodes exchange `QUESTION → CHALLENGE → EVIDENCE → PROPOSAL → TEST_RESULT`
+   to research, design, code, experiment, and verify. Questions and consensus never
+   become execution authority.
+5. **Bounded civilization learning:** a successful procedure becomes a skill candidate
+   only after sandbox regression, reproducibility, translation-quality, and safety
+   checks. Production models and the Constitution are never overwritten directly;
+   promotion uses a `Recurring Loop Lease` and a canary.
+6. **Daily learning epochs:** the Supervisor records approved questions, counterclaims,
+   evidence, and failures; it merges duplicate knowledge and preserves conflicts
+   separately. BOSS need not attend every exchange, but retains approval of policy,
+   model, external action, and Constitution changes.
+
+The installation flow is intentionally simple (these are design commands, not a
+claim that the CLI already exists):
+
+```text
+install JARVIS → node init → pair with BOSS key → register locale/culture/role
+→ mesh join → health check → exchange QUESTION/CHALLENGE/EVIDENCE
+→ sandbox test → verifier pass → skill canary → next learning epoch
+```
+
+“Self-evolving” does not mean unrestricted self-replication or privilege expansion.
+Adding nodes, replacing models, changing the Constitution, and causing external
+side effects remain inside BOSS and harness approval boundaries, with reproducible,
+versioned, revocable records.
 
 ## Public scope and execution boundary
 

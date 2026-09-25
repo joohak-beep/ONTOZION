@@ -48,6 +48,101 @@ The learning loop makes the next run faster and better.
 
 The central rule is **parallel thinking, single execution**. Several models may propose plans, but only one plan that passes policy and verification is allowed to commit a real side effect.
 
+## 1.3 Social purpose and the multi-computer civilization mesh
+
+ONTOZION is not ultimately a collection of isolated assistants. It is a **BOSS-owned
+AGI civilization mesh** in which JARVIS nodes with different languages, cultural
+contexts, and specialist roles question, challenge, translate, and experiment with
+one another. As human societies expanded knowledge through different lived
+experiences, each node preserves its local context while collaborating through a
+shared ontology. A culture profile is not a ranking of authority; normative conflicts
+remain explicit with their evidence instead of being hidden in an average.
+
+### Installing and joining a node
+
+One computer runs one JARVIS. The package combines local STT/TTS, local models,
+ontology memory, Agent Supervisor, Mesh Bus, MCP Host, and Verifier. The BOSS on each
+computer performs the pairing:
+
+```text
+1. install JARVIS
+2. node init: create node_id, device key, locale, languages, and culture/specialist profile
+3. pair with the BOSS public key and mutual TLS
+4. register allowed capabilities, data classes, models, and memory scope
+5. mesh join: add only approved peers to the allow-list
+6. verify health, key rotation, and revocation paths
+```
+
+The node manifest contains no passwords, raw voice, or private keys:
+
+```json
+{
+  "node_id": "boss-laptop-ko",
+  "owner_key": "public-key-fingerprint",
+  "locale": "ko-KR",
+  "languages": ["ko", "en"],
+  "culture_profile": "BOSS-approved context pack",
+  "roles": ["translator", "builder", "verifier"],
+  "models": ["local-sllm", "local-open-weight"],
+  "capabilities": ["memory.query", "sandbox.test"],
+  "data_classes": ["D0", "D1"],
+  "policy_version": "..."
+}
+```
+
+### Human-sparse dialogue and the shared protocol
+
+After BOSS sets a topic, goal, red lines, and completion condition, each JARVIS can
+question the others without asking a human at every intermediate step. Internal
+messages are typed, signed, expiring, and evidence-linked rather than unbounded prose.
+
+```text
+QUESTION → CHALLENGE → TRANSLATION → EVIDENCE
+→ PROPOSAL → SIMULATION/TEST_RESULT → PROMOTION_REQUEST
+```
+
+Each message carries `message_id`, `sender_node`, `receiver_node`,
+`ontology_version`, `policy_version`, `context_refs`, `evidence_refs`, uncertainty,
+`expires_at`, and a signature. Source and translation are retained together. Low
+translation confidence or cultural ambiguity returns the message as `CHALLENGE`.
+Questions, consensus, and votes never become capabilities or administrator access;
+external actions still pass the node's Authority Broker and BOSS policy.
+
+### Continuous evolution through learning epochs
+
+Mesh improvement is not unrestricted self-replication. It is a sequence of approved
+**learning epochs**:
+
+1. JARVIS proposes a new question, skill, or norm candidate.
+2. Nodes challenge it from different language, cultural, and specialist perspectives.
+3. A sandbox reproduces code, tools, translations, and retrieval behavior.
+4. The Verifier measures truthfulness, safety, reproducibility, translation quality,
+   and cost.
+5. Only a passing procedure becomes a skill candidate and runs as a canary under a
+   `Recurring Loop Lease`.
+6. A regression-passing version is promoted to production models or ontology
+   projections only after BOSS approval.
+
+An offline node can continue its local epoch and synchronize signed events and
+conflicts when it reconnects. A failed node cannot gain another node's authority.
+Adding nodes, replacing models, changing the Constitution, and causing external side
+effects always require BOSS approval, re-authentication, and a ledger record; human-
+sparse dialogue does not remove those boundaries.
+
+### Phased implementation plan
+
+| Phase | Implementation goal | Acceptance gate |
+|---|---|---|
+| 0 | Multiple local workers and a typed Agent Bus on one computer | Questions, challenges, and verification reproduce locally |
+| 1 | Two-computer BOSS pairing and signed messages | Only approved peers communicate; revocation is immediate |
+| 2 | Three or more role nodes for translation, design, and verification | Language/cultural overlays preserve evidence |
+| 3 | Human-sparse sandbox learning epochs | Failure isolation, regression, and canary promotion |
+| 4 | Daily approved loops and offline synchronization | Cost, latency, safety, and reproducibility targets pass |
+
+The measure of civilization is not the number of nodes. It is whether different
+perspectives produce better, evidenced choices without violating BOSS self-
+determination, the Constitution, or privacy.
+
 ## 2. Full architecture
 
 ```text
