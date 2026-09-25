@@ -138,7 +138,9 @@ JARVIS is a harness around several model roles and deterministic tools:
                                   |
                            Constitution
                                   |
-                         Authority broker
+                           Authority broker
+                                  |
+                         Agent Supervisor
                                   |
         +--------------------- JARVIS ---------------------+
         |                 chief orchestrator               |
@@ -159,6 +161,26 @@ The model may propose. The harness decides whether a proposal is allowed. A tool
 may execute. The verifier decides whether the intended post-condition is true.
 The ledger records evidence. This separation is the main protection against a
 fluent model gradually becoming an invisible administrator.
+
+### Agent Supervisor: the harness control plane
+
+The Agent Supervisor is integrated into the JARVIS harness but runs as a separate
+protected process. It is not another conversational agent. It starts and stops
+workers, enforces CPU/GPU/memory and time limits, renews heartbeats, isolates crashes,
+and closes risky work when the authority broker or ledger is unhealthy.
+The Authority Broker and Supervisor are sibling control-plane components, not a new
+authority hierarchy. The Supervisor never creates or mints capabilities; only the
+Authority Broker can issue them.
+
+One computer runs one Supervisor and one JARVIS Orchestrator. The Supervisor manages
+the model gateway, Agent Bus, MCP host, and worker agents. The Orchestrator makes plans;
+the Supervisor manages execution lifecycle; only the Authority Broker can issue a
+capability for a side effect. An agent's question or agreement never becomes authority.
+
+Local MCP servers use child-process `stdio` where possible. Remote MCP connections use
+authenticated HTTP. Internal agent messages use typed JSON over a local pipe or socket,
+not free-form natural language. A failed worker is restarted or retired without taking
+down the entire harness.
 
 ## The ontology harness: why the harness is the JARVIS OS
 

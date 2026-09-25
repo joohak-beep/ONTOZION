@@ -66,6 +66,11 @@ The central rule is **parallel thinking, single execution**. Several models may 
                          │ deterministic gate │
                          └─────────┬──────────┘
                                    │ allowed capabilities only
+                         ┌─────────▼──────────┐
+                         │ Agent Supervisor   │
+                         │ lifecycle/resources│
+                         └─────────┬──────────┘
+                                   │ execution coordination
 ┌──────────────┐       ┌──────────▼──────────┐       ┌──────────────┐
 │ voice / UI   │──────▶│ JARVIS orchestrator │◀──────│ memory store │
 │ phone input  │       │ understand / plan   │       │ private data │
@@ -92,6 +97,37 @@ The central rule is **parallel thinking, single execution**. Several models may 
                          │ replay / audit     │
                          └────────────────────┘
 ```
+
+### 2.1 Harness control plane and Agent Supervisor
+
+The Agent Supervisor is not a second JARVIS. It is a deterministic operating layer
+integrated into the harness. It does not replace the JARVIS Orchestrator's goals or
+judgment; it manages agent lifecycle, resources, isolation, cancellation, and restart.
+The Authority Broker and Supervisor are sibling control-plane components inside the
+harness, not a new authority hierarchy. The Supervisor never creates or mints a
+capability; that authority remains exclusively with the Authority Broker.
+
+```text
+Harness OS
+├─ Authority Broker : mints or denies capabilities; final veto on side effects
+├─ Agent Supervisor : registry, admission, heartbeat, timeout, kill, and quotas
+├─ JARVIS Orchestrator : interprets BOSS requests, retrieves memory, plans, coordinates
+├─ Model Gateway : SLLM, local open-weight, and optional cloud teacher
+├─ Agent Bus : typed agent messages and task state
+├─ MCP Host : local stdio tools and authenticated remote HTTP tools
+└─ Ledger : append-only request, authority, execution, verification, and recovery record
+```
+
+One computer runs one Supervisor and one Orchestrator. The Supervisor starts first as
+a protected Windows Service, launchd job, or systemd service, then manages the
+Orchestrator, inference server, MCP servers, and worker agents as child processes.
+If the Supervisor or Authority Broker is unhealthy, risky external actions fail closed.
+If one worker crashes, the other workers and the harness ledger remain available.
+
+Every agent manifest includes an `agent_id`, model, capabilities, data class, memory
+scope, CPU/GPU/memory quotas, maximum runtime, and a kill handle. An unregistered agent
+does not run. Agent questions, consensus, or ACP messages never become authority; only
+the Authority Broker can mint a short-lived capability bound to a target and scope.
 
 ### JARVIS versus the authority broker
 

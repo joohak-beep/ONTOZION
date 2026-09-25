@@ -163,7 +163,7 @@
         </div>
       </header>
       <div class="content">
-        <section class="view active" id="view-overview">
+        <section class="view active" id="view-overview" data-search="overview personal intelligence operating system JARVIS Constitution harness execution Agent Supervisor lifecycle">
           <h3>00 · Overview</h3>
           <p class="lead">The control path is deliberately layered: the model proposes, the harness checks, tools execute, and the ledger records what actually happened.</p>
           <div class="diagram" aria-label="JARVIS architecture map">
@@ -175,6 +175,8 @@
               <button class="node" data-node="broker">Authority broker<small>fast policy gate</small></button>
             </div>
             <div class="diagram-row">
+              <span class="arrow">↓</span>
+              <button class="node" data-node="supervisor">Agent Supervisor<small>lifecycle · resources · stop</small></button>
               <span class="arrow">↓</span>
               <button class="node" data-node="jarvis">JARVIS<small>orchestrator</small></button>
               <span class="arrow">↓</span>
@@ -231,6 +233,7 @@
           <p class="lead">The harness is JARVIS's operating system: it owns routing, permissions, memory, tools, verification, and records, while an ontology kernel gives every memory layer the same meaning and relationship contract.</p>
           <table><thead><tr><th>Layer</th><th>Responsibility</th><th>Hard boundary</th></tr></thead><tbody>
             <tr><td>Voice / UI</td><td>Wake session, interruption, status, visible evidence</td><td>No action before a valid session token</td></tr>
+            <tr><td>Agent Supervisor</td><td>Agent registry, admission, heartbeat, quotas, timeout, restart, and kill</td><td>Does not invent goals or mint capabilities</td></tr>
             <tr><td>Chief orchestrator</td><td>Interpret intent, choose lane, coordinate sub-agents</td><td>Cannot grant itself authority</td></tr>
             <tr><td>Policy compiler</td><td>Evaluate constitution and risk</td><td>Fail closed on unknown policy</td></tr>
             <tr><td>Memory fabric</td><td>Short, medium, long, and fact memory with provenance</td><td>Retrieval is scoped to the task</td></tr>
@@ -448,6 +451,7 @@
         boss: ["BOSS", "The single human owner. Defines values, approves high-risk scope, can revoke access, inspect records, and stop the system."],
         constitution: ["Constitution", "A versioned policy contract compiled into risk classes, schemas, allowlists, expiry rules, and postcondition tests."],
         broker: ["Authority broker", "A narrow enforcement layer. It checks a scoped token and policy decision quickly; it cannot invent authority or change the constitution."],
+        supervisor: ["Agent Supervisor", "The harness control plane, not a second conversational agent. It admits, starts, monitors, limits, cancels, restarts, and retires workers; it never invents goals or mints capabilities."],
         jarvis: ["JARVIS", "The chief orchestrator. It understands requests, retrieves context, chooses tools or sub-agents, and reports evidence without owning irreversible power."],
         models: ["Model pool", "A role-based set of local, personal SLLM, cloud-teacher, and verifier models. Routing is measured and reversible."],
         memory: ["Memory + indexes", "Tiered memory plus lexical, semantic, temporal, graph, procedure, and provenance indexes. Retrieval is minimal and scoped."],

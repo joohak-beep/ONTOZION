@@ -250,7 +250,7 @@
       </aside>
 
       <main>
-        <section class="view active" id="view-overview" data-search="전체 그림 개인 지능 운영체제 자비스 헌법 하네스 실행 기록">
+        <section class="view active" id="view-overview" data-search="전체 그림 개인 지능 운영체제 자비스 헌법 하네스 실행 기록 Agent Supervisor 에이전트 감독관">
           <div class="hero">
             <div>
               <div class="eyebrow">Interactive blueprint · v1</div>
@@ -277,6 +277,10 @@
               <button class="arch-node boss" type="button" data-detail="boss"><span class="kicker">ROOT AUTHORITY</span><strong>BOSS</strong><small>소유권 · 목적 · 최종 승인</small></button>
               <button class="arch-node" type="button" data-detail="constitution"><span class="kicker">IMMUTABLE LAW</span><strong>헌법</strong><small>절대 금지선 · 상속 규칙</small></button>
               <button class="arch-node broker" type="button" data-detail="broker"><span class="kicker">ENFORCEMENT</span><strong>권한 중개기</strong><small>허용·거부 · 토큰 발급</small></button>
+            </div>
+            <div class="connector">↓ 하네스 통제 계층 ↓</div>
+            <div class="arch-row">
+              <button class="arch-node" type="button" data-detail="supervisor"><span class="kicker">CONTROL PLANE</span><strong>Agent Supervisor</strong><small>생명주기 · 자원 · 중지</small></button>
               <button class="arch-node" type="button" data-detail="jarvis"><span class="kicker">ORCHESTRATOR</span><strong>자비스</strong><small>이해 · 계획 · 조정</small></button>
               <button class="arch-node model" type="button" data-detail="models"><span class="kicker">MODEL POOL</span><strong>모델들</strong><small>SLLM · 오픈웨이트 · 교사</small></button>
             </div>
@@ -327,6 +331,7 @@
             <tr><td><strong>기억 관리자</strong></td><td>지금 필요한 개인 기억과 과거 작업을 찾아 제공</td><td>원본 비밀정보를 모델에 무제한 전달하지 않음</td></tr>
             <tr><td><strong>모델 선택기</strong></td><td>작업 난이도와 개인정보 등급에 맞는 모델 선택</td><td>모델이 직접 외부 행동을 실행하게 하지 않음</td></tr>
             <tr><td><strong>계획기</strong></td><td>목표를 실행 단계와 조건으로 분해</td><td>권한을 스스로 부여하지 않음</td></tr>
+            <tr><td><strong>Agent Supervisor</strong></td><td>에이전트 등록·실행·heartbeat·자원 한도·중지·재시작 관리</td><td>목표를 만들거나 capability를 스스로 발급하지 않음</td></tr>
             <tr><td><strong>권한 중개기</strong></td><td>능력·대상·범위·만료·승인을 빠르게 검사</td><td>새로운 목표를 만들거나 토론하지 않음</td></tr>
             <tr><td><strong>실행기</strong></td><td>브라우저·CLI·API·앱에 제한된 행동 전달</td><td>권한 없는 셸을 실행하지 않음</td></tr>
             <tr><td><strong>검증기</strong></td><td>화면·상태·응답·파일을 다시 확인</td><td>출력 문구만 보고 성공 판정하지 않음</td></tr>
@@ -601,6 +606,7 @@
         boss: { title: 'BOSS · 유일한 소유자', body: '목적, 소유권, 헌법, 상속, 긴급 정지를 결정합니다. 자비스보다 느릴 수 있지만 자비스가 대신할 수 없는 권한입니다.', tag: 'ROOT AUTHORITY' },
         constitution: { title: '헌법 · 바뀌지 않는 금지선', body: '모델이 바뀌어도 유지되는 원칙입니다. 일부는 문장으로, 일부는 중개기와 운영체제 규칙으로 검사합니다.', tag: 'IMMUTABLE LAW' },
         broker: { title: '권한 중개기 · 작은 안전 게이트', body: '자비스의 계획을 대신 생각하지 않습니다. 능력, 대상, 범위, 만료, 승인, 계획 지문만 빠르게 확인하고 토큰을 발급하거나 거부합니다.', tag: 'ENFORCEMENT' },
+        supervisor: { title: 'Agent Supervisor · 하네스 통제 계층', body: '두 번째 자비스가 아닙니다. 등록된 Worker를 실행·감시·중지·재시작하고 자원과 생존 신호를 관리합니다. 목표를 만들거나 capability를 발급하지 않으며, broker가 비정상이면 위험 작업을 닫습니다.', tag: 'CONTROL PLANE' },
         jarvis: { title: '자비스 · 대표 총괄 에이전트', body: '요청을 이해하고, 기억을 찾고, 모델을 고르고, 계획을 만들고, 실행기를 조정합니다. 실행 권한은 중개기가 정한 범위 안에 있습니다.', tag: 'ORCHESTRATOR' },
         models: { title: '모델 풀 · 역할별 두뇌', body: '개인 SLLM은 빠른 반사신경, 오픈웨이트 모델은 넓은 사고, 클라우드 모델은 어려운 문제의 교사로 사용합니다.', tag: 'MODEL POOL' },
         memory: { title: '기억·지식 · 필요한 것만 회상', body: '헌법, 정책, 세션, 개인 기억, 절차, 사건을 층으로 나눕니다. 지금 작업에 필요한 문맥만 꺼냅니다.', tag: 'CONTEXT' },

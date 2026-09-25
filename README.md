@@ -170,6 +170,21 @@ CodePlan은 저장소·브랜치·파일·심볼·수정 이유·테스트·제�
 포함하는 타입화된 계획입니다. 하네스는 `repo.search/read/patch/test/diff/rollback`
 같은 도구만 허용하고, 자유 문장을 셸 명령으로 재해석하지 않습니다.
 
+### Agent Supervisor: 하네스의 통제 계층
+
+Agent Supervisor는 하네스에 통합된 운영 계층이지만 보호된 별도 프로세스로
+실행합니다. 대화하는 또 하나의 자비스가 아니라, 에이전트를 등록·실행·감시·중지하고
+CPU·GPU·메모리·실행 시간·heartbeat(생존 신호)를 제한하는 관리자입니다.
+권한 중개기와 Supervisor는 하네스 안의 형제 통제 계층입니다. Supervisor가 더 높은
+권한을 갖는 것이 아니며, capability를 만들고 발급하는 일은 권한 중개기만 담당합니다.
+
+한 컴퓨터에는 Supervisor 하나와 JARVIS Orchestrator 하나를 둡니다. Supervisor는
+추론 게이트웨이, Agent Bus, MCP Host, 각 Worker를 관리하고, Orchestrator는 목표와
+계획을 만듭니다. 실제 부작용 권한은 Authority Broker만 발급하며, 에이전트끼리의
+질문이나 합의는 권한이 되지 않습니다. 로컬 MCP는 가능하면 자식 프로세스 `stdio`로,
+원격 MCP는 인증된 HTTP로 연결하고, 내부 메시지는 자유 문장이 아닌 타입이 정해진
+JSON으로 보냅니다.
+
 읽기·검색·독립 테스트는 병렬로 처리하고, 같은 파일의 쓰기만 직렬화합니다.
 작은 반복 작업은 SLLM이나 codemod가 맡으며, 새 아키텍처·낮은 확신도·반복
 실패만 강한 로컬 모델이나 선택적 클라우드 교사로 올립니다. 모델은 직접
