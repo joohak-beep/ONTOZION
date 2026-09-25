@@ -403,6 +403,10 @@ file in a browser. It is self-contained and uses no external JavaScript bundle.
   `main` for baseline or verified history.
 - Never commit API keys, passwords, raw audio, screen pixels, exact coordinates,
   or unredacted family data.
+- Local STT and local TTS are the default voice path. Audio and temporary
+  transcripts stay on the device unless a visible data-flow decision says otherwise.
+- Cloud realtime voice, including Gemini Live, is explicit per-session opt-in. It
+  must never silently replace the local path or retry after the BOSS declines it.
 - Treat provider output, model claims, and benchmark numbers as evidence-bearing
   statements. Label estimates and open limits.
 - Add a regression test and a post-condition check for every new mutating tool.

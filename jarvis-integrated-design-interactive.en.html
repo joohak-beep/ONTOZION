@@ -163,7 +163,7 @@
         </div>
       </header>
       <div class="content">
-        <section class="view active" id="view-overview" data-search="overview personal intelligence operating system JARVIS Constitution harness execution Agent Supervisor lifecycle">
+        <section class="view active" id="view-overview" data-search="overview personal intelligence operating system JARVIS Constitution harness execution Agent Supervisor lifecycle local STT local TTS cloud voice opt-in">
           <h3>00 · Overview</h3>
           <p class="lead">The control path is deliberately layered: the model proposes, the harness checks, tools execute, and the ledger records what actually happened.</p>
           <div class="diagram" aria-label="JARVIS architecture map">
@@ -209,7 +209,7 @@
                 <li>BOSS authority is explicit, scoped, revocable, and never inferred from silence.</li>
                 <li>Irreversible actions require a fresh approval token, unless a pre-approved narrow policy covers them.</li>
                 <li>Credentials and secrets are referenced through a vault; they never enter prompts or logs.</li>
-                <li>Local/private data stays local by default. Cloud transfer is a separately visible data-flow decision.</li>
+                <li>Private data and local STT/TTS stay local by default. Cloud voice is a separately visible, per-session choice.</li>
                 <li>Every tool call is least-privilege, typed, bounded, and idempotent where possible.</li>
                 <li>Uncertainty causes a pause, a smaller action, or a question; it never silently becomes permission.</li>
                 <li>Verification follows execution. A successful API response is not the same as the desired state.</li>
@@ -232,7 +232,7 @@
           <h3>02 · Harness</h3>
           <p class="lead">The harness is JARVIS's operating system: it owns routing, permissions, memory, tools, verification, and records, while an ontology kernel gives every memory layer the same meaning and relationship contract.</p>
           <table><thead><tr><th>Layer</th><th>Responsibility</th><th>Hard boundary</th></tr></thead><tbody>
-            <tr><td>Voice / UI</td><td>Wake session, interruption, status, visible evidence</td><td>No action before a valid session token</td></tr>
+            <tr><td>Voice / UI</td><td>Local STT/TTS by default, wake session, interruption, status, and visible evidence</td><td>No silent cloud voice or action before a valid session token</td></tr>
             <tr><td>Agent Supervisor</td><td>Agent registry, admission, heartbeat, quotas, timeout, restart, and kill</td><td>Does not invent goals or mint capabilities</td></tr>
             <tr><td>Chief orchestrator</td><td>Interpret intent, choose lane, coordinate sub-agents</td><td>Cannot grant itself authority</td></tr>
             <tr><td>Policy compiler</td><td>Evaluate constitution and risk</td><td>Fail closed on unknown policy</td></tr>
@@ -240,6 +240,7 @@
             <tr><td>Tool adapters</td><td>Browser, shell, files, screen, camera, phone, finance</td><td>Typed inputs, allowlists, rate limits</td></tr>
             <tr><td>Verifier / ledger</td><td>Check postconditions, receipts, rollback, audit</td><td>No “done” without evidence</td></tr>
           </tbody></table>
+          <div class="gate" style="background:#eef8ff;border-color:#b9dcf2"><strong>Default voice path:</strong> <code>microphone → local STT → local dialogue router → local TTS</code> is the default. Gemini Live or another cloud realtime voice provider requires an explicit BOSS choice for that session; a refusal or cloud failure never silently promotes local audio to the cloud.</div>
           <div class="gate"><strong>Core definition:</strong> The harness is not merely an approval proxy. It is the combination of an <strong>ontology kernel, memory projections, action contracts, and a verification/ledger bus</strong>. Without ontology-linked memory, JARVIS may retrieve similar text, but it cannot reliably answer who did what, when, under which authority, with what evidence.</div>
           <div class="grid">
             <article class="card"><span class="pill">Semantic kernel</span><h4>Objects and relationships</h4><p>Stable IDs represent people, BOSS, family members, agents, models, devices, apps, accounts, tasks, skills, capabilities, policies, memories, events, evidence, and outcomes.</p></article>

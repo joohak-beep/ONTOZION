@@ -142,7 +142,7 @@ the Authority Broker can mint a short-lived capability bound to a target and sco
 
 1. BOSS is the sole owner.
 2. JARVIS assists BOSS but does not replace BOSS's values or ownership.
-3. Private data stays local by default.
+3. Private data and the default voice path (local STT/TTS) stay local by default.
 4. JARVIS may use only explicitly registered capabilities.
 5. Irreversible actions require a separate approval path.
 6. Important actions carry a plan, authority, result, and evidence.
@@ -157,7 +157,7 @@ The Constitution is not only a long prompt. Minimum privilege, approval, expiry,
 
 | Component | Responsibility | Boundary |
 |---|---|---|
-| Input/session manager | Combine voice, text, and screen input into a session | Does not rewrite the user's intent |
+| Input/session manager | Use local STT and local TTS by default, then combine voice, text, and screen input into a session | Does not silently choose cloud voice or rewrite the user's intent |
 | Memory manager | Retrieve the private context needed for this task | Does not expose secrets without policy |
 | Model router | Choose a model by task, privacy, and latency | Does not let models call tools directly |
 | Planner | Break a goal into steps and conditions | Does not grant authority |
@@ -165,6 +165,17 @@ The Constitution is not only a long prompt. Minimum privilege, approval, expiry,
 | Executor | Operate a browser, CLI, API, or app | Does not open an arbitrary admin shell |
 | Verifier | Check the screen, file, state, and response | Does not trust a success sentence alone |
 | Ledger/learning | Store events, skills, tests, and model versions | Does not silently rewrite the production model |
+
+### Default voice path
+
+The default voice hot path is `microphone → local STT → local dialogue router → local TTS`.
+Wake, short dialogue, and status reports must work without a cloud round trip, and
+audio plus temporary transcripts stay on the device by default. Gemini Live or another
+cloud realtime voice provider is a separate, explicit per-session choice: show the
+data class, transfer scope, cost, and record before sending anything. If BOSS declines
+the route, or the cloud route fails, JARVIS stays local; it never silently promotes
+local voice traffic to the cloud. A route change is recorded and does not carry into
+the next session automatically.
 
 ### 4.1 Ontology harness — the semantic kernel of the JARVIS OS
 
@@ -320,7 +331,7 @@ promotion still requires execution evidence and a reviewed diff.
 ```text
 1. BOSS speaks.
 2. Wake word, identity, and session are checked.
-3. Speech is transcribed.
+3. Speech is transcribed by local STT by default (an explicitly selected cloud voice session is the exception).
 4. Current conversation and relevant memory are retrieved.
 5. The request is classified: chat, information, local work, external action, or high-risk action.
 6. JARVIS writes a plan.
@@ -329,7 +340,7 @@ promotion still requires execution evidence and a reviewed diff.
 9. A device agent executes.
 10. Screen, state, and response are checked again.
 11. The result becomes VERIFIED, FAILED, BLOCKED, or UNKNOWN.
-12. JARVIS reports the result by voice and UI.
+12. JARVIS reports the result by local TTS and UI by default (the selected voice route is recorded).
 13. The event and reusable learning material are stored.
 ```
 
@@ -680,14 +691,14 @@ Never record raw passwords, card numbers, API keys, or private source audio.
 - Do not mark an unverified result as success.
 - Use idempotency keys for retries.
 - Resume from the last verified step after a service restart.
-- Use the local fallback only inside its allowed scope during a cloud outage.
+- If an optional cloud voice route fails, stay on local STT/TTS. Never silently promote local voice traffic to the cloud.
 - Block risky work if the authority broker is unhealthy.
 - Let BOSS revoke all active execution tokens with an emergency stop.
 
 ## 16. Build order
 
 1. Constitution, BOSS identity, authority broker, and append-only ledger
-2. Natural voice sessions and short-term memory
+2. Natural local STT/TTS sessions and short-term memory
 3. Medium/long-term memory and parallel indexes
 4. Browser, file, CLI, and API capability registry
 5. Real outcome verification and recovery
