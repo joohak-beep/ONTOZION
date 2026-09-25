@@ -319,7 +319,7 @@
           </div>
         </section>
 
-        <section class="view" id="view-authority" data-search="authority approval risk payment trade deletion administrator subscription investment bank account coupon points passkey credentials">
+        <section class="view" id="view-authority" data-search="authority approval risk payment trade deletion administrator subscription investment bank account coupon points passkey credentials agent loop recurring execution lease schedule">
           <h3>04 · Authority</h3>
           <p class="lead">The authority broker is not a second boss and not a second conversational agent. It is a narrow, fast enforcement layer below the constitution and above tools.</p>
           <div class="grid">
@@ -327,6 +327,11 @@
             <article class="card"><h4>Amber · confirm or simulate</h4><p>Send a message, change a setting, install software, use a credential, or touch an external account. Show the exact proposed action.</p></article>
             <article class="card"><h4>Red · BOSS only</h4><p>Financial orders, irreversible deletion, legal commitments, public publication, new data-sharing scope, and policy changes.</p></article>
           </div>
+          <div class="gate warn"><strong>Preflight and requests:</strong> Before acting, JARVIS checks the Constitution version, risk/data class, target, capability, expiry, budget, rollback, and policy conflicts. If allowed, it runs; if scope is missing, it sends <code>REQUEST_APPROVAL</code> to BOSS. If it conflicts with the Constitution, it does not run and may only submit <code>PROPOSE_RULE_CHANGE</code>; no rule changes before BOSS approval, re-authentication, a new version, and regression tests.</div>
+          <div class="section-head"><div><h3>Agent-loop authority, approval, and execution</h3></div><p>A periodic run is an expiring lease, not an unbounded timer.</p></div>
+          <pre class="json">PROPOSED → PREFLIGHTED → APPROVAL_PENDING → APPROVED/GRANTED
+→ SCHEDULED → RUNNING → VERIFIED → EXPIRED/REVOKED/PAUSED/FAILED/KILLED</pre>
+          <div class="gate"><strong>Loop rule:</strong> JARVIS may propose a loop but cannot activate it or widen its scope. The Supervisor rechecks <code>loop_id</code>, interval, maximum runs/budget, target, tools, policy version, expiry, and <code>kill_handle</code> before every iteration. A Worker runs only with a short Authority Broker capability, heartbeat, and timeout; the next iteration is scheduled only after a verified post-condition. BOSS, Broker, or Supervisor can stop it, and a policy change never carries an old lease forward without fresh approval.</div>
           <div class="section-head"><div><h3>What JARVIS may find first</h3></div><p>Automate discovery and preparation; bind movement of money to a separate rule.</p></div>
           <div class="grid">
             <article class="card"><h4>Discover</h4><p>Find unused subscriptions, expiring coupons, and points; prepare candidates with fees, family sharing, and conversion conditions.</p></article>

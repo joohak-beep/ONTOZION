@@ -303,6 +303,44 @@ The constitution is implemented as machine-checkable schemas, risk classes,
 allow-lists, expiry rules, and verification tests. It is not left only in a
 system prompt that a model might forget.
 
+### JARVIS preflight and request authority
+
+When JARVIS discovers that a task needs more scope, the harness first checks the
+Constitution version, risk and data class, target, capability, expiry, budget,
+rollback path, existing policy, and conflicts. If the task is already allowed, it
+runs. If scope is missing, JARVIS asks BOSS for a one-time approval or a recurring
+policy. If the request conflicts with the Constitution, it does not run; it may only
+draft a rule-change proposal with impact, risk, and alternatives. A prohibited
+exception cannot be requested as a shortcut.
+
+The request includes `request_id`, `kind`, `reason`, `target`, `scope`, `risk`, the
+current policy version, `proposed_diff`, expiry, rollback, and evidence. After BOSS
+approval, the Authority Broker issues a new version and short-lived capability, and
+the Agent Supervisor executes it. A rejected request is not repeatedly nagged. An
+actual Constitution change requires BOSS re-authentication/signature, a new version,
+effective time, and regression tests before activation.
+
+### Agent-loop authority and execution procedure
+
+A periodic run is not just a timer. It needs a `Recurring Loop Lease` containing a
+BOSS standing policy or a new approval. JARVIS may plan and propose the loop, but it
+cannot activate one or widen its scope.
+
+```text
+PROPOSED → PREFLIGHTED → APPROVAL_PENDING → APPROVED/GRANTED
+→ SCHEDULED → RUNNING → VERIFIED → EXPIRED/REVOKED/PAUSED/FAILED/KILLED
+```
+
+The lease contains `loop_id`, interval, maximum runs/time/budget, target and allowed
+tools, data class, approval mode, policy version, expiry, failure behavior, and a
+`kill_handle`. Before each iteration the Supervisor rechecks policy and target and
+starts the Worker only with a short Authority Broker capability, heartbeat, and
+timeout. The next iteration is scheduled only after a verified post-condition.
+BOSS can stop all loops or one loop; the Broker revokes expiry, withdrawal, or policy
+conflict; the Supervisor isolates resource excess, repeated failure, or target change.
+A policy change never carries an old lease forward: preflight and new approval are
+required.
+
 ## Memory and retrieval
 
 JARVIS uses the smallest useful context for each task:

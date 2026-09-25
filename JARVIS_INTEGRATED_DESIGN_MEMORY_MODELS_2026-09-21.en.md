@@ -572,6 +572,75 @@ P95 latency                   better than baseline
 
 JARVIS never receives the administrator password. It requests a bounded capability such as `backup_project`; the broker checks scope and expiry, then runs a signed procedure.
 
+### Preflight, approval, and rule-change requests
+
+When JARVIS needs a new recurring task or capability, the harness first checks the
+current Constitution version, risk and data class, target, capability, expiry, budget,
+rollback path, existing approvals, and policy conflicts. The result is one of four
+outcomes:
+
+```text
+ALLOW               → run inside an existing standing policy
+REQUEST_APPROVAL    → ask BOSS for this action or recurring policy
+PROPOSE_RULE_CHANGE → draft a Constitution/policy change but do not run the work
+DENY                → a prohibition or unknown condition blocks the request
+```
+
+The request is shown as a structured record rather than free-form persuasion:
+
+```json
+{
+  "request_id": "uuid",
+  "kind": "approval | recurring_policy | rule_change",
+  "reason": "why it is needed",
+  "target": "device, account, or task",
+  "scope": "allowed boundary",
+  "risk": "green | yellow | red",
+  "affected_policy_version": "current version",
+  "proposed_diff": "what would change",
+  "expiry": "short expiry",
+  "rollback": "how to undo it",
+  "evidence": ["supporting evidence"]
+}
+```
+
+After BOSS approval, the Authority Broker creates a new version and short-lived
+capability, and the Supervisor runs it. A rejection is not repeatedly nagged. A
+Constitution-level prohibition does not receive an exception request; only an
+amendable policy may be proposed with impact, risk, and alternatives. An actual
+Constitution change requires BOSS re-authentication/signature, a new version,
+effective time, and regression tests before activation.
+
+### 13.0.1 Agent-loop authority, approval, change, and execution
+
+A periodic Agent does not become active because a timer wakes it. An active loop
+needs a **Recurring Loop Lease** containing a BOSS standing policy or a new approval.
+JARVIS may propose and plan a loop, but it cannot activate one or widen its own scope.
+
+```text
+PROPOSED
+  → PREFLIGHTED        Constitution, target, data, risk, and budget checks
+  → APPROVAL_PENDING   structured request shown to BOSS
+  → APPROVED/GRANTED   Broker issues a policy version and short loop lease
+  → SCHEDULED          Supervisor registers the queue and next due time
+  → RUNNING            each iteration gets a fresh capability, heartbeat, and timeout
+  → VERIFIED           post-condition, ledger event, and next-due calculation
+  → EXPIRED/REVOKED/PAUSED/FAILED/KILLED
+```
+
+The lease contains `loop_id`, interval, maximum runs/time/budget, target and allowed
+tools, data class, approval mode, policy version, expiry, failure behavior, and a
+`kill_handle`. Before every iteration the Supervisor rechecks the policy version and
+target. A Worker cannot run without a short capability from the Authority Broker.
+Only a verified post-condition schedules the next iteration.
+
+BOSS can stop all loops or one `loop_id` at any time. The Authority Broker revokes a
+lease on expiry, withdrawal, or policy conflict. The Supervisor pauses and isolates a
+loop on heartbeat loss, resource excess, repeated failure, or target change. If a
+policy broadens scope or changes the target, the old lease never carries forward:
+preflight and a new approval are required. Agent consensus and self-modification
+inside a loop are not authority; every state transition is written to the ledger.
+
 ### 13.1 Proactive household and finance housekeeping
 
 JARVIS should not wait for BOSS to notice every repetitive nuisance. It can inspect

@@ -209,6 +209,40 @@ JSON으로 보냅니다.
 5. Gemini Live 같은 클라우드 실시간 음성은 BOSS가 세션별로 명시적으로 선택·승인한 경우에만 사용합니다. 로컬에서 클라우드로 몰래 전환하거나, 거부된 경로를 자동 재시도하지 않습니다.
 6. 결제·예약·삭제·전송 등 외부 부작용은 명시적 승인 또는 BOSS가 미리 적은 좁은 규칙 없이는 실행하지 않습니다.
 
+### 자비스의 사전 검사와 요청 권한
+
+자비스는 필요한 작업을 발견하면 먼저 헌법 버전, 위험·데이터 등급, 대상,
+capability, 만료, 예산, 되돌릴 방법, 기존 정책과의 충돌을 검사합니다. 그 결과가
+허용 범위면 실행하고, 범위가 부족하면 BOSS에게 사전 승인 또는 반복 정책을
+요청합니다. 헌법과 충돌하면 실행하지 않고, 영향·위험·대안을 담은 규칙 수정안만
+제안합니다. 헌법상 금지된 예외를 요구할 수는 없습니다.
+
+요청에는 `request_id`, `kind`, `reason`, `target`, `scope`, `risk`, 현재 정책 버전,
+`proposed_diff`, 만료, rollback, 근거를 넣습니다. BOSS가 승인한 뒤에만 Authority
+Broker가 새 버전과 짧은 capability를 발급하고, Agent Supervisor가 실행합니다.
+거절된 요청을 반복하지 않으며, 실제 헌법 변경은 BOSS 재인증·서명, 새 버전,
+적용 시각, 회귀시험을 남긴 뒤 활성화합니다.
+
+### 에이전트 루프 권한과 실행 절차
+
+주기 실행은 단순한 타이머가 아니라 BOSS의 사전 정책 또는 새 승인을 담은
+`Recurring Loop Lease`가 있어야 합니다. 자비스는 루프를 기획·제안할 수 있지만
+스스로 활성화하거나 범위를 넓힐 수 없습니다.
+
+```text
+PROPOSED → PREFLIGHTED → APPROVAL_PENDING → APPROVED/GRANTED
+→ SCHEDULED → RUNNING → VERIFIED → EXPIRED/REVOKED/PAUSED/FAILED/KILLED
+```
+
+Lease에는 `loop_id`, 주기, 최대 횟수·시간·예산, 대상·허용 도구, 데이터 등급,
+승인 방식, 정책 버전, 만료, 실패 동작, `kill_handle`을 담습니다. 매 회차마다
+Supervisor가 정책과 대상을 다시 확인하고, Authority Broker의 짧은 capability와
+heartbeat·timeout 안에서만 Worker를 실행합니다. 검증된 post-condition이 확인된
+경우에만 다음 회차를 예약합니다. BOSS는 전체 또는 특정 루프를 언제든 중지할 수
+있고, Broker는 만료·철회·정책 충돌 시 권한을 폐기하며, Supervisor는 자원 초과·
+반복 실패·대상 변경 시 루프를 격리합니다. 정책이 바뀌면 기존 Lease를 자동
+승계하지 않고 재검사와 새 승인을 받습니다.
+
 ## 자비스의 선제적 정리와 금융 안전
 
 자비스는 사용하지 않는 구독, 만료될 쿠폰·포인트, 거의 쓰지 않는 계좌,

@@ -420,7 +420,7 @@
           </div>
         </section>
 
-        <section class="view" id="view-authority" data-search="권한 승인 위험 결제 거래 삭제 관리자 토큰 구독 투자 은행 계좌 쿠폰 포인트 패스키 자격증명">
+        <section class="view" id="view-authority" data-search="권한 승인 위험 결제 거래 삭제 관리자 토큰 구독 투자 은행 계좌 쿠폰 포인트 패스키 자격증명 에이전트 루프 반복 실행 lease 스케줄">
           <div class="eyebrow">04 · Authority</div><h2>빠르면서도 위험하지 않게</h2>
           <p class="lead">모든 문장을 승인받는 것이 아니라, 위험한 행동만 멈춰 세우는 구조가 효율성과 안전을 동시에 만듭니다.</p>
           <div class="section-head"><div><h3>세 가지 실행 통로</h3></div></div>
@@ -429,6 +429,11 @@
             <div class="card risk-card yellow"><h4>노란색 · 조건부 <span class="pill amber">지속 승인</span></h4><ul><li>브라우저 입력</li><li>파일 이름 변경</li><li>로그인된 서비스의 일반 작업</li><li>정해진 범위 안의 반복 업무</li></ul></div>
             <div class="card risk-card red"><h4>빨간색 · 확인 <span class="pill red">BOSS</span></h4><ul><li>메일·게시물 외부 발송</li><li>결제·예약·증권 거래</li><li>대량 삭제</li><li>헌법·권한·모델 변경</li></ul></div>
           </div>
+          <div class="callout" style="margin-top:14px;background:#fff7e6;border-color:#f0d69b"><strong>사전검사와 요청:</strong> 자비스는 실행 전에 헌법 버전, 위험·데이터 등급, 대상, capability, 만료, 예산, rollback, 기존 승인과 충돌 여부를 확인합니다. 허용되면 실행하고, 범위가 부족하면 BOSS에게 <code>REQUEST_APPROVAL</code>을 보냅니다. 헌법과 충돌하면 실행하지 않고 <code>PROPOSE_RULE_CHANGE</code>만 제안하며, BOSS 승인·재인증·새 버전·회귀시험 전에는 규칙을 바꾸지 않습니다.</div>
+          <div class="section-head"><div><h3>에이전트 루프 권한·승인·실행</h3></div><p>주기 실행은 타이머가 아니라 만료되는 권한 Lease입니다.</p></div>
+          <pre class="json">PROPOSED → PREFLIGHTED → APPROVAL_PENDING → APPROVED/GRANTED
+→ SCHEDULED → RUNNING → VERIFIED → EXPIRED/REVOKED/PAUSED/FAILED/KILLED</pre>
+          <div class="callout" style="margin-top:14px"><strong>루프 규칙:</strong> 자비스는 루프를 제안할 수 있지만 스스로 활성화하거나 범위를 넓힐 수 없습니다. Lease의 <code>loop_id</code>·주기·최대 횟수·예산·대상·허용 도구·정책 버전·만료·<code>kill_handle</code>을 Supervisor가 매 회차 재검사합니다. Authority Broker의 짧은 capability와 heartbeat·timeout 안에서만 실행하고, 검증된 post-condition 뒤에만 다음 회차를 예약합니다. BOSS·Broker·Supervisor는 언제든 중지할 수 있으며 정책 변경 시 새 승인 없이는 기존 Lease를 승계하지 않습니다.</div>
           <div class="section-head"><div><h3>자비스가 먼저 찾아내는 일</h3></div><p>발견·제안은 자동화하고, 돈의 이동은 별도 규칙으로 묶습니다.</p></div>
           <div class="grid-3">
             <div class="card"><span class="pill">발견</span><h4 style="margin-top:10px">구독·쿠폰·포인트</h4><p>사용하지 않은 구독, 만료일, 전환 조건을 찾아 후보를 준비합니다. 수수료와 가족 공유 여부도 함께 보여줍니다.</p></div>
